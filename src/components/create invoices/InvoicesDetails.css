@@ -1,0 +1,51 @@
+.invoices-details {
+    background: #f8f9fa;
+ 
+    
+  }
+  
+  .card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    width: 90%; 
+    margin-top: 40px;
+  }
+  
+  .service-image img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    margin-top: 20px ;
+  }
+  
+  .service-details {
+    flex: 1;
+  }
+  
+  .details-section h4 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .btn-hover {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .btn-hover:hover {
+    transform: scale(1.05);
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

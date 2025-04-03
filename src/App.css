@@ -1,0 +1,95 @@
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+  }
+ 
+  
+  .main-content {
+    flex-grow: 1;
+    margin-left: 250px;  
+    width: calc(100% - 250px);
+    overflow-y: auto;
+  }
+  
+  @media (max-width: 1080px) {
+    .slide-navbar {
+      width: 69px;
+    }
+  
+    .main-content {
+      margin-left: 69px;
+      width: calc(100% - 69px);
+    }
+  }
+  
+
+  /* craete invoices  */
+
+  /* تحسين تصميم الكارد */
+
+
+  .create-invoices {
+    /* background-color: #f8f9fa; */
+    padding: 20px ;
+  }
+.invoice-card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.invoice-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* تحسين الأزرار وإضافة تأثير hover */
+.btn-hover {
+  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+}
+
+.btn-hover:hover {
+  transform: scale(1.05);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #1e7e34;
+}
+
+/* تحسين الرسالة */
+.alert-info {
+  border-left: 5px solid #007bff;
+  font-weight: bold;
+}
+
+/* تحسين حقل البحث والفلتر */
+.form-control,
+.form-select {
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  border-color: #007bff;
+}
+
+
+/* craete invoices details  */
+ 
