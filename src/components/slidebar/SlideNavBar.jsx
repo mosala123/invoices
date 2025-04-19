@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import { CgProfile, CgAdd } from "react-icons/cg";
 import { TbReportSearch } from "react-icons/tb";
 import { RiMenu2Fill } from "react-icons/ri";
-import { Link, useLocation } from "react-router-dom"; // استيراد useLocation
+import { Link, useLocation } from "react-router-dom";  
 import imageslide from "../../images/logo.svg";
 import "./SlideNavBar.css";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { AiOutlineHome } from "react-icons/ai";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
+import { FaCartShopping } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const SlideNavBar = () => {
   const [isVisible, setIsVisible] = useState(window.innerWidth > 1080);
-  const location = useLocation(); // الحصول على مسار الصفحة الحالي
+  const location = useLocation();  
 
   const toggleNavbar = () => {
     if (window.innerWidth <= 1080) {
@@ -28,6 +30,11 @@ const SlideNavBar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+
+ const cart=useSelector((state)=>state.cart)
+
+
+
   return (
     <div className={`slide-navbar ${isVisible ? "show" : ""}`}>
       <div className="d-flex align-items-center justify-content-between w-100 mb-3">
@@ -41,9 +48,9 @@ const SlideNavBar = () => {
       </div>
 
       <div className="slide-bottom text-start">
-        <ul>
-          <li>
-            <Link
+        <ul  >
+          <li  >
+            <Link  
               to="/"
               className={`d-flex gap-3 ${
                 location.pathname === "/" ? "active" : ""
@@ -64,18 +71,8 @@ const SlideNavBar = () => {
               <span className={isVisible ? "" : "d-none"}>About Us</span>
             </Link>
           </li>
-          <li>
-            <Link
-              to="/create-invoice"
-              className={`d-flex gap-3 ${
-                location.pathname === "/create-invoice" ? "active" : ""
-              }`}
-            >
-              <CgAdd className="slideicons" />
-              <span className={isVisible ? "" : "d-none"}>Create Invoice</span>
-            </Link>
-          </li>
-          <li>
+         
+          {/* <li>
             <Link
               to="/invoiceslist"
               className={`d-flex gap-3 ${
@@ -85,7 +82,7 @@ const SlideNavBar = () => {
               <LiaFileInvoiceSolid className="slideicons" />
               <span className={isVisible ? "" : "d-none"}>Invoices List</span>
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link
               to="/report"
@@ -107,7 +104,21 @@ const SlideNavBar = () => {
               <CgProfile className="slideicons" />
               <span className={isVisible ? "" : "d-none"}>Profile</span>
             </Link>
+ 
           </li>
+
+
+
+
+ 
+
+
+
+
+
+
+
+
         </ul>
       </div>
     </div>

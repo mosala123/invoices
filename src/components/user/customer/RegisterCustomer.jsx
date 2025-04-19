@@ -10,8 +10,8 @@ import { ID } from 'appwrite';
 const RegisterCustomer = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [jobTitle, setJobTitle] = useState("");  // New Job Title field
-  const [phone, setPhone] = useState("");  // New Phone field
+  const [jobTitle, setJobTitle] = useState("");   
+  const [phone, setPhone] = useState("");   
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const navigate = useNavigate();
@@ -58,31 +58,9 @@ const RegisterCustomer = () => {
                 />
               </div>
 
-              {/* Job Title */}
-              <div className="form-group d-flex align-items-center mb-3 border-bottom pb-2">
-                <MdWork className="me-2 fs-4 text-primary" />
-                <input
-                  value={jobTitle}
-                  onChange={(e) => setJobTitle(e.target.value)}
-                  type="text"
-                  className="form-control border-0 shadow-none"
-                  placeholder="Job Title (e.g., Software Engineer)"
-                  required
-                />
-              </div>
+              
 
-              {/* Phone */}
-              <div className="form-group d-flex align-items-center mb-3 border-bottom pb-2">
-                <MdPhone className="me-2 fs-4 text-primary" />
-                <input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  type="tel"
-                  className="form-control border-0 shadow-none"
-                  placeholder="Phone Number"
-                  required
-                />
-              </div>
+              
 
               {/* Email */}
               <div className="form-group d-flex align-items-center mb-3 border-bottom pb-2">

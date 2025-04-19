@@ -25,17 +25,10 @@
   
 
   /* craete invoices  */
-
-  /* تحسين تصميم الكارد */
-
-
-  .create-invoices {
-    /* background-color: #f8f9fa; */
-    padding: 20px ;
-  }
 .invoice-card {
-  border-radius: 10px;
+  margin: 0 0 0 20px;
   overflow: hidden;
+  
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
@@ -43,16 +36,12 @@
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
-
-/* تحسين الأزرار وإضافة تأثير hover */
 .btn-hover {
   transition: background-color 0.3s ease, transform 0.2s ease-in-out;
 }
-
 .btn-hover:hover {
   transform: scale(1.05);
 }
-
 .btn-primary {
   background-color: #007bff;
   border-color: #007bff;
@@ -70,8 +59,6 @@
 .btn-success:hover {
   background-color: #1e7e34;
 }
-
-/* تحسين الرسالة */
 .alert-info {
   border-left: 5px solid #007bff;
   font-weight: bold;
@@ -90,6 +77,4 @@
   border-color: #007bff;
 }
 
-
-/* craete invoices details  */
  

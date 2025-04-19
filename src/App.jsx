@@ -3,7 +3,6 @@ import "./App.css";
 import AboutPages from "./components/about us/AboutPages";
 import CreateInvoices from "./components/create invoices/CreateInvoices";
 import InvoicesDetails from "./components/create invoices/InvoicesDetails";
-import InvoicesList from "./components/invoices list/InvoicesList";
 import LoginCustomer from "./components/user/customer/LoginCustomer";
 import RegisterCustomer from "./components/user/customer/RegisterCustomer";
 import LoginFreelancer from "./components/user/freelancer/LoginFreelancer";
@@ -15,9 +14,10 @@ import "react-toastify/dist/ReactToastify.css";
 import ProfileFreelancer from "./components/profile me/profilefreelancer/ProfileFreelancer";
 import ProfileClient from "./components/profile me/profileclient/ProfileClient";
 import Profileme from "./components/profile me/Profileme";
-import InvoicesListDetails from "./components/invoices list/InvoicesListDetails";
 import Homepages from "./components/home/Homepages";
 import AddProjects from "./components/dashboardClient/AddProjects";
+import ShapeInvoices from "./components/shapeinvo/ShapeInvoices";
+import CartInvoices from "./components/create invoices/CartInvoices";
 
 function App() {
   return (
@@ -27,61 +27,46 @@ function App() {
       {/* المحتوى الرئيسي */}
       <div className="main-content">
         <Routes>
+
+          {/* add new post  */}
           <Route path="/addanewpro" element={<AddProjects />} />
+          {/* -------------------------------------------------------------------------- */}
 
-          {/* user */}
-          <Route path="/FinanceAdvisor/profile" element={<Profileme />} />
-          <Route
-            path="/FinanceAdvisor/profilefreelancer"
-            element={<ProfileFreelancer />}
-          />
-          <Route
-            path="/FinanceAdvisor/profileclient"
-            element={<ProfileClient />}
-          />
 
-          <Route
-            path="/FinanceAdvisor/registerclient"
-            element={<RegisterCustomer />}
-          />
-          <Route
-            path="/FinanceAdvisor/loginclient"
-            element={<LoginCustomer />}
-          />
-          <Route
-            path="/FinanceAdvisor/loginfreelancer"
-            element={<LoginFreelancer />}
-          />
-          <Route
-            path="/FinanceAdvisor/registerfreelancer"
-            element={<RegisterFreelancer />}
-          />
+          {/* invoices    الواتير  */}
 
-          {/* ----------- */}
+          {/* ------------------------------ */}
 
-          {/* invoince  */}
-          <Route
-            path="/FinanceAdvisor/invoicedetails/:invoicesId"
-            element={<InvoicesDetails />}
-          />
+          {/* user ------------------------------------------------------------------*/}
+          <Route path="/profile" element={<Profileme />} />
+          <Route path="/profilefreelancer" element={<ProfileFreelancer />} />
+          <Route path="/profileclient" element={<ProfileClient />} />
+          <Route path="/registerclient" element={<RegisterCustomer />} />
+          <Route path="/loginclient" element={<LoginCustomer />} />
+          <Route path="/loginfreelancer" element={<LoginFreelancer />} />
+          <Route path="/registerfreelancer" element={<RegisterFreelancer />} />
 
-          <Route path="/FinanceAdvisor/about" element={<AboutPages />} />
-          <Route
-            path="/FinanceAdvisor/create-invoice"
-            element={<CreateInvoices />}
-          />
-          <Route
-            path="/FinanceAdvisor/invoiceslist"
-            element={<InvoicesList />}
-          />
-          <Route path="/FinanceAdvisor/report" element={<ReportsPage />} />
+          {/* ----------------------------------------------------------------------------- */}
 
-          <Route
-            path="/FinanceAdvisor/invoice-details/:invoiceId"
-            element={<InvoicesListDetails />}
-          />
+          {/* home pages --------------------------------------------------------------------  */}
+          <Route path="/" element={<Homepages />} />
+          <Route path="/about" element={<AboutPages />} />
+          <Route path="/create-invoice" element={<CreateInvoices />} />
+
+
+          <Route path="/ProductsDetails/:invoiceId" element={<InvoicesDetails />} />
+
+
+          <Route path="/cartinvoices" element={<CartInvoices />} />
+          {/* genertaion invoices  */}
+          <Route path="/invoice/:invoiceId" element={<ShapeInvoices />} />
+
+
+
+          <Route path="/report" element={<ReportsPage />} />
         </Routes>
       </div>
+
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

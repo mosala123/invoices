@@ -1,0 +1,42 @@
+.Stats {
+  background-color: var(--card-bg);
+  padding: 5vh 10px 5vh 10px ;
+}
+.Stats .top {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  color: var(--text-color);
+}
+.Stats .top b {
+  font-size: var(--bold-size);
+  font-weight: var(--heading-weight);
+}
+.Stats .top p {
+  font-size: var(--paragraph-size);
+  font-weight: var(--paragraph-weight);
+  font-family: var(--paragraph-font);
+}
+.Stats .card_Stats {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--text-color);
+}
+.Stats .card_Stats b {
+  font-size: var(--bold2-size);
+  color: var(--text-color);
+  font-weight: var(--heading-weight);
+  color: var(--accent-color);
+}
+.Stats .card_Stats p {
+  font-size: var(--paragraph-size);
+  font-weight: var(--paragraph-weight);
+  font-family: var(--paragraph-font);
+  width: max-content;
+}

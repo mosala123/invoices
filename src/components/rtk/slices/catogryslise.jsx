@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const catogeyproduct = createAsyncThunk("catogrySlise/catogeyproduct",async()=>{
 
-const res= await fetch("https://www.freetestapi.com/api/v1/users")
+const res= await fetch("http://localhost:3001/products")
 const data= await res.json()
 return data
 

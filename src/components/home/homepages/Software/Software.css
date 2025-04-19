@@ -1,0 +1,202 @@
+
+.Soft{
+    position: relative;
+    padding-bottom: 23vh !important;
+    
+}
+.ppp{
+    text-align: center;
+    font-family: var(--bold-font);
+    font-weight: var(--bold-weight);
+    font-size: var(--bold-size);
+    color: var(--text-color) !important;
+    position: relative;
+    z-index: 2;
+    margin: auto;
+    width: 80%;
+}
+.ppp::before {
+    content: "";
+    position: absolute;
+    width: 105%;
+    height: 120%;
+    
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    transform: translate(-50%, -50%) skewX(-15deg);
+    background-color: var(--primary-color) !important;
+}
+.left{
+    height: 60%;
+    padding: 0 !important;
+}
+.left img{
+    height: 100%;
+    width: 100%;
+}
+.right{
+    margin-left: 20px;
+    height:100% !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between !important;
+    
+}
+
+.right b {
+    font-family: var(--bold2-font);
+    font-weight: var(--bold2-weight);
+    font-size: var(--bold2-size);
+    text-transform: uppercase;
+    color: var(--primary-color);
+    line-height: 1.2;
+}
+.right b span {
+    color: var(--accent-color);
+    position: relative;
+    z-index: 5;
+    text-align: center;
+}
+.right b span::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    transform: translate(-50%, -50%) skewX(-15deg);
+    background: var(--primary-color);
+    width: 105%;
+    height: 110%;
+}
+.right p {
+    font-family: var(--paragraph-font);
+    font-weight: var(--paragraph-weight);
+    font-size: var(--paragraph-size);
+    line-height: 24px;
+    color: var(--primary-color);
+    text-transform: capitalize;
+}
+.right .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    border: none;
+    background-color: var(--text-color);
+    height: 40%;
+    
+}
+.right .card div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.right .card div span,
+.right .card div p {
+    font-family: var(--paragraph-font);
+    font-weight: var(--paragraph-weight);
+    font-size: var(--paragraph-size);
+    color: var(--primary-color);
+    text-transform: capitalize;
+    margin-bottom: 0 !important;
+}
+
+.cart2 {
+    width: 100%;
+    height: 40vh;
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px;
+    background-color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cart2 div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    z-index: 6;
+}
+.cart2 div b {
+    font-family: var(--bold2-font);
+    font-weight: var(--bold2-weight);
+    font-size: var(--bold2-size);
+    color: var(--text-color);
+    text-align: center;
+}
+.cart2 div button {
+    width: 188px;
+    height: 35px;
+    border-radius: 5px;
+    padding-top: 7px;
+    padding-right: 15px;
+    padding-bottom: 7px;
+    padding-left: 15px;
+    font-family: var(--bold2-font);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0%;
+    cursor: pointer;
+    border: none !important;
+    outline: none !important;
+}
+.cart2 .img1 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 75%;
+}
+.cart2 .img2 {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    height: 120%;
+    width: 380px;
+    filter: var(--man);
+}
+
+.cart2 .img3 {
+    height: 115%;
+    width: 50%;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+@media (max-width:993px) {
+    .cart2 .img1 {
+        width: 30%;
+        height: 65%;
+    }
+    .cart2 .img3 {
+        width: 70%;
+        height: 120%;
+    }
+    .cart2 .img2 {
+        display: none;
+    }
+    .right , .left{
+        height: 55vh;
+        padding: 20px !important;
+    }
+    
+}
+@media (max-width:771px) {
+    .right{
+        margin-left: 0;
+    }
+    .cart2 .img1 {
+        display: none;
+    }
+    .cart2 .img3 {
+        display: none;
+    }
+}

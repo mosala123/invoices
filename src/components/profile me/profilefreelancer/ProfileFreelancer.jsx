@@ -3,8 +3,11 @@ import { accountFreelancer } from '../../user/appwritefreelancer';
 import { toast } from 'react-toastify';
 import { FaUserCircle, FaEnvelope, FaPhone, FaBriefcase, FaEdit, FaTrash, FaCode, FaGraduationCap, FaLink, FaGlobe } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Noprofile from '../Noprofile';
+import { FaCartShopping, FaPersonFalling } from 'react-icons/fa6';
+import { BiSolidHourglassTop } from 'react-icons/bi';
+import { CgAdd } from 'react-icons/cg';
 
 const ProfileFreelancer = () => {
   const [userfreelancer, setUserfreelancer] = useState(null);
@@ -13,7 +16,7 @@ const ProfileFreelancer = () => {
     name: '',
     email: '',
     phone: '',
-    currentJob: '', // استبدال occupation بـ currentJob
+    currentJob: '',
     skills: '',
     experience: '',
     education: '',
@@ -32,7 +35,7 @@ const ProfileFreelancer = () => {
           name: userData.name || '',
           email: userData.email || '',
           phone: userData.phone || '',
-          currentJob: userData.currentJob || '', // استبدال occupation بـ currentJob
+          currentJob: userData.currentJob || '',
           skills: userData.skills || '',
           experience: userData.experience || '',
           education: userData.education || '',
@@ -62,7 +65,6 @@ const ProfileFreelancer = () => {
 
   const handleUpdate = async () => {
     try {
-      // هنا يجب إضافة كود لتحديث البيانات في Appwrite
       toast.success('Profile updated successfully!');
       setEditMode(false);
     } catch (error) {
@@ -71,8 +73,8 @@ const ProfileFreelancer = () => {
   };
 
   return (
-    <div className="pb-5">
-      <div className="container-fluid d-flex align-items-center justify-content-center bg-light" style={{ minHeight: '100vh' }}>
+    <div className="pb-5 " >
+      <div className="   d-flex align-items-center justify-content-center  " style={{ minHeight: '100vh' }}>
         {userfreelancer ? (
           <div className="row w-100">
             <div className="col-12 col-md-12 col-lg-8 mx-auto">
@@ -80,7 +82,7 @@ const ProfileFreelancer = () => {
                 <div className="text-center">
                   <FaUserCircle className="text-primary mb-3" size={150} />
                   <h2 className="text-dark"> {userData.name || 'No Name'}</h2>
-                  <p className="text-muted"> {userData.currentJob || 'No Job'}</p> {/* استبدال occupation بـ currentJob */}
+                  <p className="text-primary"> {userData.email || 'No email'}</p>
                 </div>
 
                 {editMode ? (
@@ -92,11 +94,19 @@ const ProfileFreelancer = () => {
                       </div>
                       <div className="col-12 col-md-6 mb-3">
                         <label className="fw-bold">Phone</label>
-                        <input type="tel" className="form-control" value={userData.phone} onChange={(e) => { const onlyNumbers = e.target.value.replace(/\D/g, ''); setUserData({ ...userData, phone: onlyNumbers }); }} placeholder="Enter your phone number" />
+                        <input
+                          type="tel"
+                          className="form-control"
+                          value={userData.phone}
+                          onChange={(e) => {
+                            const onlyNumbers = e.target.value.replace(/\D/g, '');
+                            setUserData({ ...userData, phone: onlyNumbers });
+                          }} placeholder="Enter your phone number"
+                        />
                       </div>
                       <div className="col-12 col-md-6 mb-3">
-                        <label className="fw-bold">Current Job</label> {/* استبدال occupation بـ currentJob */}
-                        <input type="text" className="form-control" value={userData.currentJob} onChange={(e) => setUserData({ ...userData, currentJob: e.target.value })} placeholder="Enter your current job" /> {/* استبدال occupation بـ currentJob */}
+                        <label className="fw-bold">Current Job</label>
+                        <input type="text" className="form-control" value={userData.currentJob} onChange={(e) => setUserData({ ...userData, currentJob: e.target.value })} placeholder="Enter your current job" />
                       </div>
                       <div className="col-12 col-md-6 mb-3">
                         <label className="fw-bold">Skills</label>
@@ -137,53 +147,74 @@ const ProfileFreelancer = () => {
                   <div className="mt-4 px-3 ">
                     <div className="row">
                       <div className="col-12 col-md-6 mb-2">
-                        <FaEnvelope className="me-2 text-primary" /> Email : {userData.email || 'No Email'}
+                        <FaEnvelope className="me-2 text-primary" /> Email : <span className="text-primary">   {userData.email || ' Email'} </span>
                       </div>
                       <div className="col-12 col-md-6 mb-2">
-                        <FaPhone className="me-2 text-success" /> Phone : {userData.phone || 'No Phone'}
+                        <FaPhone className="me-2 text-success" /> Phone : <span className="text-primary">  {userData.phone || 'Add Phone'} </span>
                       </div>
                       <div className="col-12 col-md-6 mb-2">
-                        <FaBriefcase className="me-2 text-warning" /> Current Job : {userData.currentJob || 'No Job'} {/* استبدال occupation بـ currentJob */}
+                        <FaBriefcase className="me-2 text-warning" /> Current Job : <span className="text-primary">   {userData.currentJob || 'Add Your Job'}  </span>
                       </div>
                       <div className="col-12 col-md-6 mb-2">
-                        <FaCode className="me-2 text-info" /> Skills : {userData.skills || 'No Skills Available'}
+                        <FaCode className="me-2 text-info" /> Skills : <span className="text-primary">   {userData.skills || 'Add Skills  '}</span>
                       </div>
                       <div className="col-12 col-md-6 mb-2">
-                        Experience : {userData.experience || 'No Experience Available'}
+                        <BiSolidHourglassTop className="me-2 text-dark" /> Experience :  <span className="text-primary">  {userData.experience || 'Add Experience  '}</span>
                       </div>
                       <div className="col-12 col-md-6 mb-2">
-                        <FaGraduationCap className="me-2 text-warning" /> Education : {userData.education || 'No Education Available'}
+                        <FaGraduationCap className="me-2 text-warning" /> Education :  <span className="text-primary"> {userData.education || 'Add Education  '}</span>
                       </div>
                       <div className="col-12 col-md-6 mb-2">
-  <FaLink className="me-2 text-danger" /> Portfolio : 
-  {userData.portfolio ? (
-    <a href={userData.portfolio} target="_blank" rel="noopener noreferrer">
-      {userData.portfolio}
-    </a>
-  ) : (
-    'No Portfolio Available'
-  )}
-</div>
-<div className="col-12 col-md-6 mb-2">
-  <FaGlobe className="me-2 text-secondary" /> Website : 
-  {userData.website ? (
-    <a href={userData.website} target="_blank" rel="noopener noreferrer">
-      {userData.website}
-    </a>
-  ) : (
-    'No Website Available'
-  )}
-</div>
+                        <FaLink className="me-2 text-danger" /> Portfolio :
+                        {userData.portfolio ? (
+                          <a href={userData.portfolio} target="_blank" rel="noopener noreferrer">
+                            {userData.portfolio}
+                          </a>
+                        ) : (
+                          <span className="text-primary  m-1">
+                            Add Portfolio
+                          </span>
+                        )}
+                      </div>
+
                       <div className="col-12 col-md-6 mb-2">
-                        Languages : {userData.languages || 'No Languages Available'}
+                        <FaGlobe className="me-2 text-secondary" /> Website :
+                        {userData.website ? (
+                          <a href={userData.website} target="_blank" rel="noopener noreferrer">
+                            <span className="text-primary">   {userData.website} </span>
+                          </a>
+                        ) :  (
+                          <span className="text-primary m-1" >
+                           Add website
+                        </span>
+                        )}
+                      </div>
+                      <div className="col-12 col-md-6 mb-2">
+                        <FaPersonFalling className="me-2 text-secondary" />  Languages : <span className="text-primary">  {userData.languages || 'No Languages Available'} </span>
                       </div>
                     </div>
+ 
+                    <div className="d-flex gap-3  mt-4 flex-wrap">
+  <Link to="/create-invoice" className="btn btn-success d-flex align-items-center gap-2">
+ <CgAdd className="slideicons" />    Create Invoice
+  </Link>
+  <Link to="/cartinvoices" className="btn btn-secondary d-flex align-items-center gap-2">
+     View Invoices
+  </Link>
+  <Link to="/cartinvoices" className="btn btn-warning d-flex align-items-center gap-2">
+   <FaCartShopping   className="slideicons"   />    Checkout Cart
+  </Link>
+</div>
 
-                    <div className="d-flex justify-content-between mt-5 mb-3">
+
+
+
+
+                    <div className="d-flex justify-content-between mt-4 mb-3">
                       <button className="btn btn-primary flex-grow-1 me-2" onClick={() => setEditMode(true)}>
                         <FaEdit className="me-2" /> Edit Profile
                       </button>
-                      <button className="btn btn-danger flex-grow-1 ms-2" onClick={handleLogout}>
+                      <button className="btn btn-danger flex-grow-1 ms-2  " onClick={handleLogout}>
                         <FaTrash className="me-2" /> Logout
                       </button>
                     </div>
@@ -193,7 +224,7 @@ const ProfileFreelancer = () => {
             </div>
           </div>
         ) : (
-          <Noprofile /> 
+          <Noprofile />
         )}
       </div>
     </div>

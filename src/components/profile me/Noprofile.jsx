@@ -9,16 +9,16 @@ import { Link } from 'react-router-dom';
 const Noprofile = () => {
 
   return (
-    <div className="  "   >
+    <div className="   " style={{paddingBottom:"0"}}   >
 
 
 
-  <header className="bg-white text-dark py-5 p-2  ">
-      <div className="container">
-        <div className="row align-items-center">
+  <div className="  text-dark py-5 p-2   ">
+      <div className="container   ">
+        <div className="row align-items-center  ">
          
           {/* Title, description, and CTA buttons */}
-          <div className="col-lg-7 text-center text-lg-start" style={{direction:"ltr"}}>
+          <div className="col-lg-7    text-center text-lg-start" style={{direction:"ltr"}}>
             <h1 className="display-4 fw-bold mb-3">Automated Invoice System</h1>
             <p className="lead mb-4">
               A complete solution for creating and managing invoices automatically. Designed specifically for freelancers 
@@ -44,12 +44,12 @@ const Noprofile = () => {
         
         </div>
       </div>
-    </header>
+    </div>
 
 
 
 
-    <section className="py-5 bg-light">
+    <section className="py-5 bg-light  ">
       <div className="container">
       <div className="text-center mb-2">
           <h2 className="fw-bold">Welcome to Our Community! 🎉</h2>
@@ -58,11 +58,11 @@ const Noprofile = () => {
             Create an account and get started today!
           </p>
         </div>
-        <div className="row justify-content-center align-items-center ">
+        <div className="row mt-5 d-flex   justify-content-center align-items-center "  style={{marginLeft:"1px "}}>
           
-          {/* تسجيل كمستخدم عادي */}
-          <div className="col-lg-5 col-md-12 mb-2 ">
-            <div className="card shadow-sm border-0 text-center p-4" style={{width:"100%"}}>
+         
+        <div className="col-lg-5 col-md-12 mb-4 ">
+            <div className="card shadow-sm border-0 text-center p-4" style={{  display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
               <FaUser className="text-primary display-4 mb-3" />
               <h5 className="fw-bold">Register as User</h5>
               <p className="text-muted">Create an account to access all features.</p>
@@ -70,9 +70,9 @@ const Noprofile = () => {
             </div>
           </div>
 
-          {/* تسجيل كمستقل */}
+          
           <div className="col-lg-5 col-md-12  mb-2">
-            <div className="card shadow-sm border-0 text-center p-4" style={{width:"100%"}}>
+            <div className="card shadow-sm border-0 text-center p-4" style={{  display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
               <FaUserTie className="text-success display-4 mb-3" />
               <h5 className="fw-bold">Register as Freelancer</h5>
               <p className="text-muted">Join us as a freelancer and offer your services.</p>
@@ -92,12 +92,12 @@ const Noprofile = () => {
 
     <section className=" py-5 bg-light">
       <div className="container text-center">  
-        <h2 className="text-center mb-2 fw-bold">System Features</h2>
-        <div className="row justify-content-center g-4" style={{alignItems:"center"}}>  
+        <h2 className="text-center mb-2 fw-bold mb-4">System Features</h2>
+        <div className="row justify-content-center g-4 align-items-center px-2" style={{alignItems:"center",marginLeft:"1px "}}>  
           
           {/* Feature 1: Automated Invoice Generation */}
-          <div className="col-md-4 col-sm-12">
-            <div className="card h-100 border-0 shadow-sm text-center" style={{width:"100%"}}>
+          <div className="col-md-4 col-sm-12 "  >
+            <div className="card h-100 border-0 shadow-sm text-center" >
               <div className="card-body p-4">
                 <div className="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
                   <FaBolt className="text-primary fs-2" />
@@ -112,7 +112,7 @@ const Noprofile = () => {
 
           {/* Feature 2: Direct Client Sending */}
           <div className="col-md-4 col-sm-12">
-            <div className="card h-100 border-0 shadow-sm text-center" style={{width:"100%"}}>
+            <div className="card h-100 border-0 shadow-sm text-center"  >
               <div className="card-body p-4">
                 <div className="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
                   <FaPaperPlane className="text-success fs-2" />
@@ -214,7 +214,7 @@ const Noprofile = () => {
 
 
 
-<section className="py-5 bg-light" style={{ direction: "ltr" }}>
+<section className="py-5 bg-light" style={{ direction: "ltr" ,display:"flex",alignItems:"center",justifyContent:"center"}}>
   <div className="container">
     <h2 className="text-center mb-5 fw-bold text-primary">Why Choose Our System?</h2>
     <div className="row align-items-center">

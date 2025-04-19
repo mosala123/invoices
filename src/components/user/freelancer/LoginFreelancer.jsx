@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import loginImage from "../../../images/signup-image-removebg-preview.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { accountFreelancer } from "../appwritefreelancer";
 
@@ -32,7 +32,7 @@ const LoginFreelancer = () => {
         <div className="row">
           {/* Form Section */}
           <div className="col-lg-6 col-md-12">
-          <h4 className="mb-4 text-primary">Welcome Back! Log in to Your Account</h4>
+            <h4 className="mb-4 text-primary">Welcome Back! Log in to Your Account</h4>
 
             <form onSubmit={handleLogin}>
               {/* Email Input */}
@@ -60,8 +60,8 @@ const LoginFreelancer = () => {
                   required
                 />
               </div>
- {/* Remember Me */}
- <div className="form-check mb-3">
+              {/* Remember Me */}
+              <div className="form-check mb-3">
                 <input type="checkbox" className="form-check-input" id="rememberMe" required />
                 <label className="form-check-label" htmlFor="rememberMe">Remember Me</label>
               </div>
@@ -75,7 +75,7 @@ const LoginFreelancer = () => {
             <div className="text-start mt-3">
               <p>
                 Don't have an account?{" "}
-                <a href="/registerfreelancer" className="text-primary">Register now</a>
+                <Link to="/registerfreelancer" className="text-primary">Register now</Link>
               </p>
             </div>
           </div>

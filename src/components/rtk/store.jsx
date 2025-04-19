@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import productSlice from "./slices/productslise";  
-import  catogrySlise  from "./slices/catogryslise";
+import productSlice from "./slices/productslise";
+import  cartSlise  from "./slices/cartslise";
  
+
+
 export const store = configureStore({
     reducer: {
-        services: productSlice, 
-        catogry :catogrySlise
-        
+        products : productSlice,
+        cart     : cartSlise
     },
 });

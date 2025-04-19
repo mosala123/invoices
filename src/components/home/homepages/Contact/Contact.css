@@ -1,0 +1,78 @@
+
+.contact {
+    background-color: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.contact-form {
+    background: linear-gradient(128.29deg, var(--primary-color) 10.95%, var(--secondary-color) 75.16%);
+    padding: 20px;
+    border-radius: 10px;
+    width: 100% !important;
+    margin: auto;
+}
+
+.contact-form label {
+    color: var(--text-color);
+}
+
+.contact-form .heading {
+    font-size: 24px;
+    color: var(--text-color);
+    margin-bottom: 12px;
+    font-weight: bold;
+    display: block;
+}
+
+.contact-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-form label {
+    margin-bottom: 10px;
+}
+
+textarea {
+    resize: none;
+    height: 80px;
+    width: 100% !important;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    box-shadow: 0 0 5px var(--accent-color);
+    transition: transform 0.3s ease-in-out;
+}
+
+.contact-form button[type="submit"] {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border: none ; 
+    border-radius: 5px;
+    padding: 10px 20px;
+   
+    cursor: pointer;
+    letter-spacing: 2px;
+}
+
+#message {
+    width: 98.5%;
+}
+
+.contact-form button[type="submit"]:hover {
+    transition: transform 0.3s ease-in-out;
+}
+

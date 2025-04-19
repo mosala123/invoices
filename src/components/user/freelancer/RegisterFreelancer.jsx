@@ -3,7 +3,7 @@ import { MdEmail, MdPerson, MdPhone, MdWork } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import registerImage from "../../../images/signup-image-removebg-preview.png";
 import { ID } from "appwrite"; // Import ID for unique user creation
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { accountFreelancer } from "../appwritefreelancer";
@@ -76,42 +76,9 @@ const RegisterFreelancer = () => {
                 />
               </div>
 
-              {/* Phone Number */}
-              <div className="form-group d-flex align-items-center mb-3 border-bottom pb-2">
-                <MdPhone className="me-2 fs-4 text-primary" />
-                <input
-                  type="tel"
-                  className="form-control border-0 shadow-none"
-                  placeholder="Phone Number"
-                  value={number}
-                  onChange={(e) => setNumber(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* Specialization */}
-              <div className="form-group d-flex align-items-center mb-3 border-bottom pb-2">
-                <MdWork className="me-2 fs-4 text-primary" />
-                <input
-                  type="text"
-                  className="form-control border-0 shadow-none"
-                  placeholder="Specialization or Job Title"
-                  value={specialization}
-                  onChange={(e) => setSpecialization(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* About You */}
-              <div className="form-group mb-3 border-bottom pb-2">
-                <textarea
-                  className="form-control border-0 shadow-none"
-                  placeholder="About You (Optional)"
-                  rows="3"
-                  value={about}
-                  onChange={(e) => setAbout(e.target.value)}
-                ></textarea>
-              </div>
+           
+              
+ 
 
               {/* Password */}
               <div className="form-group d-flex align-items-center mb-3 border-bottom pb-2">
@@ -138,7 +105,10 @@ const RegisterFreelancer = () => {
                   required
                 />
               </div>
-
+              <div className="form-check mb-3">
+                <input type="checkbox" className="form-check-input" id="rememberMe" required />
+                <label className="form-check-label" htmlFor="rememberMe">Remember Me</label>
+              </div>
               {/* Register Button */}
               <button type="submit" className="btn btn-primary w-100 rounded-pill">Register</button>
             </form>
@@ -147,7 +117,7 @@ const RegisterFreelancer = () => {
             <div className="text-start mt-3">
               <p>
                 Already have an account? {" "}
-                <a href="/loginfreelancer" className="text-primary">Login</a>
+                <Link to="/loginfreelancer" className="text-primary">Login</Link>
               </p>
             </div>
           </div>

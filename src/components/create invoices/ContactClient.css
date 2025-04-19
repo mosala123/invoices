@@ -1,0 +1,19 @@
+.ContactClient .card {
+    position: fixed;
+    right: -400px;  
+    top: 10px;
+    transition: right 0.8s ease-in-out; 
+   
+  }
+  
+  @media screen and (max-width: 2000px) {
+     
+  
+    .ContactClient .card.open {
+      right: 30px ;  
+    }
+    .ContactClient .card.close{
+           right: 240px ; ;
+    }
+  }
+  
