@@ -183,28 +183,28 @@ const ProfileFreelancer = () => {
                           <a href={userData.website} target="_blank" rel="noopener noreferrer">
                             <span className="text-primary">   {userData.website} </span>
                           </a>
-                        ) :  (
+                        ) : (
                           <span className="text-primary m-1" >
-                           Add website
-                        </span>
+                            Add website
+                          </span>
                         )}
                       </div>
                       <div className="col-12 col-md-6 mb-2">
                         <FaPersonFalling className="me-2 text-secondary" />  Languages : <span className="text-primary">  {userData.languages || 'No Languages Available'} </span>
                       </div>
                     </div>
- 
+
                     <div className="d-flex gap-3  mt-4 flex-wrap">
-  <Link to="/create-invoice" className="btn btn-success d-flex align-items-center gap-2">
- <CgAdd className="slideicons" />    Create Invoice
-  </Link>
-  <Link to="/cartinvoices" className="btn btn-secondary d-flex align-items-center gap-2">
-     View Invoices
-  </Link>
-  <Link to="/cartinvoices" className="btn btn-warning d-flex align-items-center gap-2">
-   <FaCartShopping   className="slideicons"   />    Checkout Cart
-  </Link>
-</div>
+                      <Link to="/create-invoice" className="btn btn-success d-flex align-items-center gap-2">
+                        <CgAdd className="slideicons" />    Create Invoice
+                      </Link>
+                      <Link to="/cartinvoices" className="btn btn-secondary d-flex align-items-center gap-2">
+                        View Invoices
+                      </Link>
+                      <Link to="/cartinvoices" className="btn btn-warning d-flex align-items-center gap-2">
+                        <FaCartShopping className="slideicons" />    Checkout Cart
+                      </Link>
+                    </div>
 
 
 
