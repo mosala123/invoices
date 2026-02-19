@@ -1,0 +1,31 @@
+.footer-section {
+  background-color: #1a1a1a !important;
+}
+
+.footer-links a {
+  transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #0d6efd !important;
+  opacity: 1 !important;
+  padding-right: 5px;
+}
+
+.footer-section .form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.footer-section .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-section .btn-primary {
+  background-color: #0d6efd;
+  border: none;
+}
+
+.footer-section .btn-primary:hover {
+  background-color: #0b5ed7;
+}

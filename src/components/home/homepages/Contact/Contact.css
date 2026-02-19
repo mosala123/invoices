@@ -1,0 +1,25 @@
+.contact-section {
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.contact-card {
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.form-control:focus {
+  background-color: #fff !important;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+  border: 1px solid #0d6efd !important;
+}
+
+.form-floating label {
+  color: #6c757d;
+  right: 0;
+  left: auto;
+  padding-right: 1rem;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+  transform: scale(0.85) translateY(-0.5rem) translateX(-0.5rem);
+}

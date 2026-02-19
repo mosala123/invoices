@@ -1,0 +1,386 @@
+<<<<<<< HEAD
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* الخطوط */
+  --heading-font: "Arial", "Helvetica Neue", "Segoe UI", sans-serif;
+  --heading-size: 70px;
+  --heading-weight: 700;
+
+  --number-font: "Courier New", monospace;
+  --number-size: 64px;
+  --number-weight: 700;
+
+  --button-font: "Verdana", sans-serif;
+  --button-size: 18px;
+  --button-weight: 600;
+
+  --smol-size: 18px;
+
+  --nav-button-font: "Verdana", sans-serif;
+  --nav-button-size: 14px;
+  --nav-button-weight: 600;
+
+  --paragraph-font: "Arial", sans-serif;
+  --paragraph-size: 22px;
+  --paragraph-weight: 500;
+
+  --bold-font: "Arial", sans-serif;
+  --bold-size: 42px;
+  --bold-weight: 600;
+
+  --bold2-font: "Arial", "Helvetica Neue", "Segoe UI", sans-serif;
+  --bold2-size: 67px;
+  --bold2-weight: 700;
+
+  /* الألوان */
+  --primary-color: #0d6efd;      /* Bootstrap primary */
+  --secondary-color: #0852ac;
+  --accent-color: rgba(74, 197, 181, 1);
+  --accent-hover: rgb(115, 219, 205);
+  --accent-active: rgb(150, 225, 215);
+  --text-color: #ffffff;
+  --text-muted: #6c757d;          /* Bootstrap text-muted */
+  --card-bg: #f8f9fa;             /* Bootstrap light */
+  --border-color: #dee2e6;
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 1rem 2rem rgba(0, 0, 0, 0.175);
+
+  /* أحجام الشعار */
+  --logo-width: 160px;
+}
+
+/* استعلامات الوسائط لضبط الأحجام */
+@media (max-width: 1367px) {
+  :root {
+    --heading-size: 58px;
+    --number-size: 52px;
+    --button-size: 18px;
+    --smol-size: 14px;
+    --nav-button-size: 14px;
+    --paragraph-size: 18px;
+    --bold-size: 28px;
+    --bold2-size: 55px;
+    --logo-width: 140px;
+  }
+}
+
+@media (max-width: 1202px) {
+  :root {
+    --paragraph-size: 16px;
+    --bold2-size: 45px;
+    --smol-size: 12px;
+    --logo-width: 140px;
+  }
+}
+
+@media (max-width: 1361px) {
+  :root {
+    --logo-width: 120px;
+  }
+}
+
+@media (max-width: 584px) {
+  :root {
+    --heading-size: 44px;
+    --number-size: 38px;
+    --smol-size: 10px;
+    --button-size: 12px;
+    --nav-button-size: 10px;
+    --paragraph-size: 12px;
+    --bold-size: 18px;
+    --bold2-size: 35px;
+    --logo-width: 100px;
+  }
+}
+
+/* أنماط الأزرار العامة */
+.Allbtn1 {
+  border: none;
+  color: var(--text-color);
+  font-family: var(--button-font);
+  font-size: var(--button-size);
+  font-weight: var(--button-weight);
+  background: var(--accent-color);
+  border-radius: 200px;
+  padding: 15px 30px;
+  width: 260px;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.Allbtn1:hover {
+  background: var(--accent-hover);
+  transform: scale(1.02);
+}
+
+.Allbtn1:active {
+  background: var(--accent-active);
+  transform: scale(0.98);
+}
+
+.Allbtns {
+  background: var(--accent-color);
+  border-radius: 200px;
+  padding: 10px 25px;
+  color: var(--text-color);
+  font-family: var(--nav-button-font);
+  font-size: var(--nav-button-size);
+  font-weight: var(--nav-button-weight);
+  border: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.Allbtns:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+}
+
+.Allbtns:active {
+  background: var(--accent-active);
+  transform: scale(0.95);
+}
+
+/* أنماط البطاقات والأقسام */
+.section-card {
+  background-color: white;
+  border-radius: 1rem !important;  /* rounded-4 */
+  box-shadow: var(--shadow-sm);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.section-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.team-card {
+  border: none;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-sm);
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+  transform: scale(1.03);
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.team-card-img {
+  height: 280px;
+  object-fit: cover;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+/* أنماط النصوص */
+.text-primary-custom {
+  color: var(--primary-color) !important;
+}
+
+.bg-light-custom {
+  background-color: var(--card-bg) !important;
+}
+
+/* أنماط الهيدر */
+.logo {
+  width: var(--logo-width);
+}
+
+/* أنماط إضافية للحركات */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* تنسيق شريط التمرير (اختياري) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+=======
+ 
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  :root {
+    --heading-font: "Arial", "Helvetica Neue", "Segoe UI", sans-serif;
+    --heading-size: 70px;
+    --heading-weight: 700;
+  
+    --number-font: "Courier New", monospace;
+    --number-size: 64px;
+    --number-weight: 700;
+  
+    --button-font: "Verdana", sans-serif;
+    --button-size: 18px;
+    --button-weight: 600;
+    
+    --smol-size: 18px;
+  
+    --nav-button-font: "Verdana", sans-serif;
+    --nav-button-size: 14px;
+    --nav-button-weight: 600;
+  
+    --paragraph-font: "Arial", sans-serif;
+    --paragraph-size: 22px;
+    --paragraph-weight: 500;
+  
+    --bold-font: "Arial", sans-serif;
+    --bold-size: 42px;
+    --bold-weight: 600;
+  
+    --bold2-font: "Arial", "Helvetica Neue", "Segoe UI", sans-serif;
+    --bold2-size: 67px;
+    --bold2-weight: 700;
+    
+    --logo-color:0;
+    --man:0;
+    --primary-color: #001b3c;
+    --secondary-color: #0852ac;
+    --accent-color: rgba(74, 197, 181, 1);
+    --accent-hover: rgb(115, 219, 205);
+    --accent-active: rgb(150, 225, 215);
+    --text-color: #ffffff;
+    --text-muted: #d9d5d5;
+    --card-bg: #456387;
+    
+    --logo-width: 160px ;
+    
+  }
+  @media (max-width:1367px) {
+    :root {
+        --heading-size: 58px;
+    
+        --number-size: 52px;
+    
+        --button-size: 18px;
+        --smol-size: 14px;
+    
+        --nav-button-size: 14px;
+    
+        --paragraph-size: 18px;
+    
+        --bold-size: 28px;
+    
+        --bold2-size: 55px;
+        
+    
+        --logo-width: 140px ;
+    }
+  }
+  
+  @media (max-width:1202px) {
+    :root {
+  
+        --paragraph-size: 16px;
+        --bold2-size: 45px;
+        --smol-size: 12px;
+  
+        --logo-width: 140px ;
+    }
+  }
+  
+  @media (max-width:1361px) {
+    :root {
+        --logo-width: 120px ;
+    }
+    
+  }
+  @media (max-width:584px) {
+    :root {
+      --heading-size: 44px;
+  
+      --number-size: 38px;
+    --smol-size: 10px;
+  
+  
+      --button-size: 12px;
+  
+      --nav-button-size: 10px;
+  
+      --paragraph-size: 12px;
+  
+      --bold-size: 18px;
+  
+      --bold2-size: 35px;
+      
+      --logo-width: 100px ;
+    }
+  }
+  
+  
+  .Allbtn1 {
+    border: none;
+    color: var(--text-color);
+    font-family: var(--button-font);
+    font-size: var(--button-size);
+    font-weight: var(--button-weight);
+    background: var(--accent-color);
+    border-radius: 200px;
+    padding: 15px 30px 15px 30px;
+    width: 260px;
+    transition: 0.5s;
+  }
+  
+  .Allbtn1:hover {
+    background: var(--accent-hover);
+  }
+  
+  .Allbtn1:active {
+    background: var(--accent-active);
+  }
+  
+  .Allbtns {
+    background: var(--accent-color);
+    border-radius: 200px;
+    padding: 10px 25px 10px 25px;
+    color: var(--text-color);
+    font-family: var(--nav-button-font);
+    font-size: var(--nav-button-size);
+    font-weight: var(--nav-button-weight);
+    line-height: 22.5px;
+    letter-spacing: 0%;
+    border: none;
+    transition: 0.3s;
+  }
+  
+  .Allbtns:hover {
+    background: var(--accent-hover);
+  }
+  
+  .Allbtns:active {
+    background: var(--accent-active);
+  }
+  
+  .logo{
+    width: var(--logo-width);
+  }
+>>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
