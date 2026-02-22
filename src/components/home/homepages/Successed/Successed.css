@@ -1,3 +1,81 @@
-.Successed{
-    padding-bottom: 13vh !important;
+.success-section {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.success-content {
+  max-width: 600px;
+}
+
+.benefits-list {
+  margin-top: 2rem;
+}
+
+.benefits-list > div {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.benefits-list > div:hover {
+  background: linear-gradient(90deg, rgba(74, 197, 181, 0.1), transparent) !important;
+  border-color: rgba(74, 197, 181, 0.2);
+  transform: translateX(10px);
+}
+
+/* تحسينات Responsive */
+@media (max-width: 991.98px) {
+  .success-section {
+    min-height: auto;
+    padding: 60px 0;
+  }
+  
+  .success-content {
+    max-width: 100%;
+    text-align: center;
+  }
+  
+  .benefits-list > div {
+    justify-content: center;
+  }
+  
+  .benefits-list > div:hover {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .success-section {
+    padding: 40px 0;
+  }
+  
+  .display-5 {
+    font-size: 2rem;
+  }
+  
+  .benefits-list .d-flex {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .btn-lg {
+    width: 100%;
+  }
+}
+
+/* أنيميشن للصورة */
+@keyframes floatImage {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.success-section img {
+  animation: floatImage 5s ease-in-out infinite;
 }

@@ -1,857 +1,702 @@
-import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-<<<<<<< HEAD
+﻿import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaEdit, FaTrash, FaInfoCircle, FaShoppingCart } from "react-icons/fa";
+import { supabase } from "../../supabaseClient";
+import Swal from "sweetalert2";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const PRIORITY = {
+  High:   { bg: "#fef2f2", color: "#dc2626", border: "#fecaca", dot: "#dc2626", label: "🔴 High"   },
+  Medium: { bg: "#fffbeb", color: "#d97706", border: "#fde68a", dot: "#d97706", label: "🟡 Medium" },
+  Low:    { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", dot: "#16a34a", label: "🟢 Low"    },
+};
+
+const EMPTY = {
+  project_name:"", deadline:"", category:"", expected_duration:"",
+  priority_level:"", service_type:"", payment_method:"", description:"", budget:"",
+};
+
+/* ── SVG Icons ── */
+const Ico = {
+  edit:     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>,
+  trash:    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>,
+  eye:      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
+  eyeOff:   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>,
+  plus:     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+  check:    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20,6 9,17 4,12"/></svg>,
+  close:    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  calendar: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+  money:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
+  clock:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>,
+  user:     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+  mail:     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
+  briefcase:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="18" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
+  tag:      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>,
+};
+
+const Label = ({ children, required, icon }) => (
+  <label className="form-label d-flex align-items-center gap-2 mb-2" style={{ fontSize: "0.85rem", fontWeight: 600, color: "#475569" }}>
+    {icon && <span style={{ color: "#6366f1" }}>{icon}</span>}
+    {children}
+    {required && <span className="text-danger" style={{ fontSize: "1.2rem", lineHeight: 1 }}>*</span>}
+  </label>
+);
+
+const Chip = ({ icon, label, value, bg = "#f8fafc", color = "#475569" }) => value ? (
+  <span className="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill" style={{ background: bg, color, border: "1px solid #e2e8f0", fontSize: "0.85rem", fontWeight: 500 }}>
+    {icon} {value}
+  </span>
+) : null;
 
 const AddProjects = () => {
-  // Form data state
-  const [formData, setFormData] = useState({
-    project_name: "",
-    deadline: "",
-    category: "",
-    expected_duration: "",
-    priority_level: "",
-    service_type: "",
-    payment_method: "",
-    description: "",
-    budget: "",
-  });
-
+  const [formData, setFormData] = useState(EMPTY);
   const [projectsList, setProjectsList] = useState([]);
-  const [clientUser, setClientUser] = useState({});
+  const [clientUser, setClientUser] = useState(null);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
   const [editingProject, setEditingProject] = useState(null);
-  const [showDetails, setShowDetails] = useState({});
+  const [openCards, setOpenCards] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const navigate = useNavigate();
 
-  // Fetch logged-in customer's data
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost/invoice_project/backend/api/auth/profile/read.php",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const result = await response.json();
-
-      if (response.ok) {
-        if (result.success && result.data) {
-          setClientUser(result.data);
-        }
-      } else {
-          toast.error(result.message || "Failed to load user data.");
-        return;
-      }
-    } catch (error) {
-      toast.error("An error occurred while fetching user data.");
-    }
+  /* fetch user */
+  const loadUser = async () => {
+    const { data: auth } = await supabase.auth.getUser();
+    if (!auth?.user) { navigate("/loginclient"); return; }
+    const { data } = await supabase.from("clients").select("*").eq("id", auth.user.id).single();
+    if (data) setClientUser(data);
+    else setClientUser({ id: auth.user.id, email: auth.user.email, name: auth.user.user_metadata?.name || auth.user.email });
   };
 
-  // Fetch customer's projects
-  const fetchProjects = async () => {
-    try {
-      console.log('=== STARTING PROJECTS FETCH ===');
-      const response = await fetch(
-        "http://localhost/invoice_project/backend/api/projects/read.php",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
-      // يعمل json file  يحط فيه الداتا اللي راجعة من ال fetch دا 
-      // وبعدين كل ما يعمل add  يزود عليه ولما يعمل delete يحذف منه
-      // وبعدين يروح في صفحة create incoice يقرأ الداتا من ال json
-      // ويتعامل عادي كا json بمعني 
-      // انه هيظهرله كل المشاريع المضافة في ال json 
-      // وبعدين يضيف في ال cart ويخزن كل حاجة json ويتعامل json
-      
-      
-      console.log('Fetched Data:', data);
-      
-      if (!response.ok) {
-        if (response.status === 401) {
-          navigate('/login');
-        } else {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return;
-      }
-
-      if (data.success && Array.isArray(data.projects)) {
-        console.log('Setting projects list with:', data.projects);
-        setProjectsList(data.projects);
-      } else {
-        console.log('No projects found or invalid data structure');
-        setProjectsList([]);
-      }
-      console.log('=== PROJECTS FETCH COMPLETED ===');
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-      setProjectsList([]);
-    }
+  /* fetch projects */
+  const loadProjects = async () => {
+    setFetching(true);
+    const { data: auth } = await supabase.auth.getUser();
+    if (!auth?.user) return;
+    const { data, error } = await supabase
+      .from("projects").select("*").eq("client_id", auth.user.id)
+      .order("created_at", { ascending: false });
+    if (!error) setProjectsList(data || []);
+    setFetching(false);
   };
 
-  useEffect(() => {
-    fetchUserData();
-    fetchProjects();
-  }, []);
+  useEffect(() => { loadUser(); loadProjects(); }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const hc = e => setFormData(p => ({ ...p, [e.target.name]: e.target.value }));
 
-  // Submit new project
-  const handleAddNewProject = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    console.log('=== STARTING PROJECT ADDITION ===');
-    console.log('Form Data:', formData);
-
-    if (
-      !formData.project_name ||
-      !formData.deadline ||
-      !formData.category ||
-      !formData.description
-    ) {
-      setError("Please fill in all required fields!");
-      toast.error("Please fill in all required fields!");
-      return;
+  /* submit */
+  const handleSubmit = async e => {
+    e.preventDefault(); setError("");
+    if (!formData.project_name || !formData.deadline || !formData.category || !formData.description) {
+      setError("Please fill in all required fields."); return;
     }
-
+    setLoading(true);
     try {
-      console.log('1. Sending request to server...');
-      const response = await fetch(
-        "http://localhost/invoice_project/backend/api/projects/create.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const result = await response.json();
-      console.log('2. Server Response:', result);
-      
-      if (response.ok && result.success) {
-        console.log('3. Project added successfully!');
-        console.log('Current projectsList:', projectsList);
-        
-        // Add the new project to the list immediately
-        const newProject = {
-          id: result.project_id,
-          ...formData
-        };
-        
-        console.log('4. New Project Object:', newProject);
-        
-        setProjectsList(prevList => {
-          console.log('5. Previous List:', prevList);
-          const updatedList = [...prevList, newProject];
-          console.log('6. Updated List:', updatedList);
-          return updatedList;
+      if (editingProject) {
+        const result = await Swal.fire({
+          title: 'Confirm Update',
+          text: 'Are you sure you want to update this project?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#6366f1',
+          cancelButtonColor: '#ef4444',
+          confirmButtonText: 'Yes, update',
+          cancelButtonText: 'Cancel',
+          reverseButtons: true
         });
+
+        if (!result.isConfirmed) {
+          setLoading(false);
+          return;
+        }
+
+        const { error } = await supabase.from("projects").update({ ...formData }).eq("id", editingProject.id);
+        if (error) throw error;
+        setProjectsList(p => p.map(x => x.id === editingProject.id ? { ...x, ...formData } : x));
         
-        toast.success(result.message || "Project submitted successfully!");
-        
-        // Clear form
-        setFormData({
-          project_name: "",
-          deadline: "",
-          category: "",
-          expected_duration: "",
-          priority_level: "",
-          service_type: "",
-          payment_method: "",
-          description: "",
-          budget: "",
+        await Swal.fire({
+          title: 'Updated!',
+          text: 'Project has been updated successfully',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
         });
-        
-        console.log('7. Form cleared, fetching updated list...');
-        await fetchProjects();
-        console.log('=== PROJECT ADDITION COMPLETED ===');
-      } else {
-        console.log('Error Response:', result);
-        if (response.status === 401) {
-          navigate('/login');
-        } else if (response.status === 422) {
-          const errorMessage = result.errors ? 
-            Object.values(result.errors).join(', ') : 
-            result.message;
-          setError(errorMessage);
-          toast.error(errorMessage);
-        } else {
-          console.error('Project creation failed:', result);
-          toast.error(result.message || "Failed to submit project. Please try again.");
-        }
-      }
-    } catch (error) {
-      console.error('Error in project creation:', error);
-      setError("An unexpected error occurred. Please try again later.");
-      toast.error("An unexpected error occurred.");
-    }
-  };
-
-  const handleUpdateProject = async (projectId) => {
-    try {
-      const response = await fetch(
-        `http://localhost/invoice_project/backend/api/projects/update.php`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            ...formData,
-            project_id: projectId
-          }),
-        }
-      );
-
-      const result = await response.json();
-      
-      if (response.ok && result.success) {
-        // Update the existing project in the list
-        setProjectsList(prevList => 
-          prevList.map(project => 
-            project.project_id === projectId 
-              ? { ...project, ...formData }
-              : project
-          )
-        );
         
         setEditingProject(null);
-        setFormData({
-          project_name: "",
-          description: "",
-          category: "",
-          deadline: "",
-          expected_duration: "",
-          priority_level: "",
-          service_type: "",
-          payment_method: "",
-          budget: "",
-        });
-        toast.success('Project updated successfully!');
       } else {
-        throw new Error(result.message || 'Failed to update project');
-      }
-    } catch (error) {
-      console.error('Error updating project:', error);
-      toast.error(error.message || 'Failed to update project. Please try again.');
-    }
-  };
-
-  const handleDeleteProject = async (projectId) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      try {
-        const response = await fetch(
-          `http://localhost/invoice_project/backend/api/projects/delete.php?id=${projectId}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const result = await response.json();
+        const { data: auth } = await supabase.auth.getUser();
+        const { data, error } = await supabase.from("projects")
+          .insert({ ...formData, client_id: auth.user.id, client_name: clientUser?.name, client_email: clientUser?.email })
+          .select().single();
+        if (error) throw error;
+        setProjectsList(p => [data, ...p]);
         
-        if (response.ok && result.success) {
-          setProjectsList(prevList => prevList.filter(project => project.project_id !== projectId));
-          toast.success("Project deleted successfully!");
-        } else {
-          toast.error(result.message || "Failed to delete project");
-        }
-      } catch (error) {
-        toast.error("An error occurred while deleting the project");
+        await Swal.fire({
+          title: 'Success!',
+          text: 'Project has been added successfully',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
       }
-    }
+      setFormData(EMPTY);
+    } catch (err) {
+      setError(err.message);
+      Swal.fire({
+        title: 'Error!',
+        text: err.message || "Something went wrong.",
+        icon: 'error',
+        confirmButtonColor: '#6366f1'
+      });
+    } finally { setLoading(false); }
   };
 
-  const handleAddToCart = (project) => {
-    const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
-    if (existingCart.some(item => item.project_id === project.project_id)) {
-      toast.info("Project is already in your cart!");
-      return;
-    }
-    
-    existingCart.push(project);
-    localStorage.setItem('cart', JSON.stringify(existingCart));
-    toast.success("Project added to cart successfully!");
-  };
-
-  // Add this new function to handle edit click
-  const handleEditClick = (project) => {
-    setEditingProject(project);
-    setFormData({
-      project_name: project.project_name,
-      deadline: project.deadline,
-      category: project.category,
-      expected_duration: project.expected_duration,
-      priority_level: project.priority_level,
-      service_type: project.service_type,
-      payment_method: project.payment_method,
-      description: project.description,
-      budget: project.budget,
-    });
-    // Scroll to form
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Add this function to toggle details
-  const toggleDetails = (projectId) => {
-    setShowDetails(prev => ({
-      ...prev,
-      [projectId]: !prev[projectId]
-    }));
-  };
-=======
-import { account } from "../user/appwrite";
-import { useNavigate } from "react-router-dom";
-
-const AddProjects = () => {
-
-  // add anew pro 
-  const [data, setdata] = useState({
-    ProjectTitle: "",
-    Deadline: "",
-    Category: "",
-    ExpectedDuration: "",
-    PriorityLevel: "",
-    ServiceType: "",
-    PaymentMethod: "",
-    ProjectDescription: "",
-    AttachProjectFiles: null,
-  });
-  const [items, setitems] = useState([]);
-  const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    setdata({ ...data, [e.target.name]: e.target.value });
-  };
-
-  const AddNewProject = (e) => {
-    e.preventDefault();
-
-    if (
-      !data.ProjectTitle ||
-      !data.Deadline ||
-      !data.Category ||
-      !data.ExpectedDuration ||
-      !data.PriorityLevel ||
-      !data.ServiceType ||
-      !data.PaymentMethod ||
-      !data.ProjectDescription
-    ) {
-      setError("Please fill in all required fields!");
-      return;
-    }
-
-    setitems([...items, data]);
-    setdata({
-      ProjectTitle: "",
-      Deadline: "",
-      Category: "",
-      ExpectedDuration: "",
-      PriorityLevel: "",
-      ServiceType: "",
-      PaymentMethod: "",
-      ProjectDescription: "",
-      AttachProjectFiles: null,
+  /* delete with confirmation */
+  const handleDelete = async id => {
+    const result = await Swal.fire({
+      title: 'Confirm Deletion',
+      text: 'Are you sure you want to delete this project? This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
     });
 
-    setError("");
+    if (!result.isConfirmed) return;
+
+    const { error } = await supabase.from("projects").delete().eq("id", id);
+    if (!error) { 
+      setProjectsList(p => p.filter(x => x.id !== id)); 
+      
+      await Swal.fire({
+        title: 'Deleted!',
+        text: 'Project has been deleted successfully',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    } else {
+      Swal.fire({
+        title: 'Error!',
+        text: error.message,
+        icon: 'error',
+        confirmButtonColor: '#6366f1'
+      });
+    }
   };
 
+  const startEdit = proj => {
+    setEditingProject(proj);
+    setFormData({ 
+      project_name: proj.project_name, 
+      deadline: proj.deadline, 
+      category: proj.category,
+      expected_duration: proj.expected_duration || "", 
+      priority_level: proj.priority_level || "",
+      service_type: proj.service_type || "", 
+      payment_method: proj.payment_method || "",
+      description: proj.description, 
+      budget: proj.budget || "" 
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
+  const cancelEdit = () => { setEditingProject(null); setFormData(EMPTY); setError(""); };
+  const toggleCard = id => setOpenCards(p => ({ ...p, [id]: !p[id] }));
 
+  const initial = (clientUser?.name || "U")[0].toUpperCase();
+  const isEditing = !!editingProject;
 
-  // get user 
-  const [clientUser, setclientUser] = useState({})
-  useEffect(() => {
-
-    const getUserData = async () => {
-
-      try {
-        const userdata = await account.get()
-
-        setclientUser(userdata)
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
-      }
-    }
-
-    getUserData()
-  }, [])
-
-
-
-
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
+  /* stats */
+  const stats = [
+    { value: projectsList.length, label: "Total Projects", icon: "📊", color: "#6366f1", bg: "#eef2ff" },
+    { value: projectsList.filter(p => p.priority_level === "High").length, label: "High Priority", icon: "🔥", color: "#dc2626", bg: "#fef2f2" },
+    { value: projectsList.filter(p => p.priority_level === "Medium").length, label: "Medium Priority", icon: "⚡", color: "#d97706", bg: "#fffbeb" },
+    { value: projectsList.filter(p => p.priority_level === "Low").length, label: "Low Priority", icon: "💧", color: "#16a34a", bg: "#f0fdf4" },
+  ];
 
   return (
-    <div className="container-fluid bg-light py-5">
-      <div className="container">
-        <h2 className="text-center text-primary mb-4">Add Your Project</h2>
+    <div className="min-vh-100" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", fontFamily: "'Inter', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        .form-control:focus, .form-select:focus {
+          border-color: #6366f1 !important;
+          box-shadow: 0 0 0 0.25rem rgba(99,102,241,0.25) !important;
+        }
+        
+        .project-card {
+          transition: all 0.3s ease;
+          animation: fadeInUp 0.5s ease;
+        }
+        
+        .project-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(99,102,241,0.15) !important;
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .stat-card {
+          transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .action-btn {
+          transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+          transform: translateY(-1px);
+        }
+      `}</style>
 
-<<<<<<< HEAD
-        {/* Project Submission Form */}
-        <form
-          className="p-4 bg-white shadow-lg rounded mb-5"
-          onSubmit={handleAddNewProject}
-        >
-          {error && <p className="text-danger text-center">{error}</p>}
+      {/* Hero Section */}
+      <div className="position-relative" style={{
+        background: "linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #8b5cf6 100%)",
+        padding: "48px 0 80px",
+        overflow: "hidden",
+      }}>
+        {/* Decorative circles */}
+        <div className="position-absolute rounded-circle" style={{
+          top: -100,
+          right: -50,
+          width: 300,
+          height: 300,
+          background: "rgba(255,255,255,0.1)",
+          pointerEvents: "none",
+        }} />
+        <div className="position-absolute rounded-circle" style={{
+          bottom: -50,
+          left: -50,
+          width: 200,
+          height: 200,
+          background: "rgba(255,255,255,0.08)",
+          pointerEvents: "none",
+        }} />
 
-=======
-        <form className="p-4 bg-white shadow-lg rounded">
-          {error && <p className="text-danger text-center">{error}</p>}
-
-
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-          <div className="row mb-3">
-            {/* Owner Name */}
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Your Name</label>
-<<<<<<< HEAD
-              <p className="border rounded p-2 bg-light">
-                {clientUser?.name || "Loading..."}
-              </p>
-=======
-              <p className="border rounded p-2 bg-light"> {clientUser?.name || "Loading..."}</p>
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
+        <div className="container position-relative" style={{ zIndex: 2 }}>
+          <div className="row align-items-center justify-content-between g-4 mb-4">
+            {/* User Info */}
+            <div className="col-12 col-lg-6">
+              <div className="d-flex align-items-center gap-4">
+                <div className="d-flex align-items-center justify-content-center rounded-circle" style={{
+                  width: "70px",
+                  height: "70px",
+                  background: "rgba(255,255,255,0.2)",
+                  border: "3px solid rgba(255,255,255,0.5)",
+                  fontSize: "28px",
+                  fontWeight: "800",
+                  color: "#fff",
+                  boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+                }}>
+                  {initial}
+                </div>
+                <div>
+                  <p className="text-white mb-1" style={{ fontSize: "14px" }}>
+                    Welcome back! 👋
+                  </p>
+                  <h1 className="text-white mb-1" style={{ fontSize: "28px", fontWeight: "700" }}>
+                    {clientUser?.name || "Loading..."}
+                  </h1>
+                  <div className="d-flex align-items-center gap-3 text-white">
+                    <span className="d-flex align-items-center gap-2">
+                      {Ico.mail} {clientUser?.email || ""}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Owner Email */}
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Your Email</label>
-<<<<<<< HEAD
-              <p className="border rounded p-2 bg-light">
-                {clientUser?.email || "Loading..."}
-              </p>
-            </div>
-          </div>
-
-=======
-              <p className="border rounded p-2 bg-light">{clientUser?.email || "Loading..."}</p>
-            </div>
-          </div>
-
-
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-          {/* Project Title */}
-          <div className="mb-3">
-            <label className="form-label fw-bold">Project Title</label>
-            <input
-<<<<<<< HEAD
-              name="project_name"
-              value={formData.project_name}
-=======
-              name="ProjectTitle"
-              value={data.ProjectTitle}
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-              onChange={handleChange}
-              type="text"
-              className="form-control"
-              placeholder="Enter project title"
-              required
-            />
-          </div>
-
-          {/* Category & Deadline */}
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Category</label>
-<<<<<<< HEAD
-              <input
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                type="text"
-                className="form-control"
-                placeholder="Enter project category"
-                required
-              />
-=======
-              <select
-                name="Category"
-                value={data.Category}
-                onChange={handleChange}
-                className="form-select"
-                required
-              >
-                <option value="">Select category</option>
-                <option>Web Development</option>
-                <option>Graphic Design</option>
-                <option>Mobile App</option>
-                <option>Marketing</option>
-              </select>
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-            </div>
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Deadline</label>
-              <input
-<<<<<<< HEAD
-                name="deadline"
-                value={formData.deadline}
-=======
-                name="Deadline"
-                value={data.Deadline}
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-                onChange={handleChange}
-                type="date"
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
-
-<<<<<<< HEAD
-=======
-          {/* Expected Duration & Cost Range */}
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Expected Duration</label>
-              <select
-                name="ExpectedDuration"
-                value={data.ExpectedDuration}
-                onChange={handleChange}
-                className="form-select"
-              >
-                <option value="" >Select duration</option>
-                <option>Less than 1 week</option>
-                <option>1 - 4 weeks</option>
-                <option>1 - 3 months</option>
-                <option>More than 3 months</option>
-              </select>
-            </div>
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Estimated Cost Range</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="e.g., $500 - $1000"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Priority & Experience Level */}
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Priority Level</label>
-              <select
-                name="PriorityLevel"
-                value={data.PriorityLevel}
-                onChange={handleChange}
-                className="form-select"
-              >
-                <option value="">Select priority</option>
-                <option>Normal</option>
-                <option>Urgent</option>
-                <option>High Priority</option>
-              </select>
-            </div>
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Required Experience Level</label>
-              <select className="form-select"  >
-                <option>Beginner</option>
-                <option>Intermediate</option>
-                <option>Expert</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Service Type & Communication Method */}
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Service Type</label>
-              <select
-                name="ServiceType"
-                value={data.ServiceType}
-                onChange={handleChange}
-                className="form-select"
-              >
-                <option value="">Select service type</option>
-                <option>One-time Project</option>
-                <option>Ongoing Work</option>
-                <option>Maintenance & Support</option>
-              </select>
-            </div>
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Preferred Communication Method</label>
-              <select className="form-select" required>
-                <option>Email</option>
-                <option>Phone Call</option>
-                <option>Video Call</option>
-                <option>Messaging Platform</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Payment Details */}
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Payment Method</label>
-              <select
-                name="PaymentMethod"
-                value={data.PaymentMethod}
-                onChange={handleChange}
-                className="form-select"
-
-              >
-                <option value="">Select payment method</option>
-                <option>PayPal</option>
-                <option>Credit Card</option>
-                <option>Bank Transfer</option>
-              </select>
-            </div>
-          </div>
-
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-          {/* Project Description */}
-          <div className="mb-3">
-            <label className="form-label fw-bold">Project Description</label>
-            <textarea
-<<<<<<< HEAD
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="form-control"
-              rows="4"
-              placeholder="Describe your project in detail"
-              required
-            ></textarea>
-          </div>
-
-          {/* Additional Details */}
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Expected Duration</label>
-              <input
-                name="expected_duration"
-                value={formData.expected_duration}
-                onChange={handleChange}
-                type="text"
-                className="form-control"
-                placeholder="e.g., 2 weeks, 1 month"
-              />
-            </div>
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Priority Level</label>
-              <select
-                name="priority_level"
-                value={formData.priority_level}
-                onChange={handleChange}
-                className="form-control"
-              >
-                <option value="">Select Priority</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Service Type</label>
-              <input
-                name="service_type"
-                value={formData.service_type}
-                onChange={handleChange}
-                type="text"
-                className="form-control"
-                placeholder="e.g., Web Development, Design"
-              />
-            </div>
-            <div className="col-md-6">
-              <label className="form-label fw-bold">Payment Method</label>
-              <select
-                name="payment_method"
-                value={formData.payment_method}
-                onChange={handleChange}
-                className="form-control"
-              >
-                <option value="">Select Payment Method</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-                <option value="PayPal">PayPal</option>
-                <option value="Cash">Cash</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label fw-bold">Budget</label>
-            <input
-              name="budget"
-              value={formData.budget}
-              onChange={handleChange}
-              type="text"
-              className="form-control"
-              placeholder="Enter your budget range"
-            />
-          </div>
-
-          <div className="text-center">
-            <button type="submit" className="btn btn-primary px-5">
-=======
-              name="ProjectDescription"
-              value={data.ProjectDescription}
-              onChange={handleChange}
-              className="form-control"
-              rows="4"
-              placeholder="Describe your project..."
-            ></textarea>
-          </div>
-
-          {/* Upload Files */}
-          <div className="mb-3">
-            <label className="form-label fw-bold">Attach Project Files</label>
-            <input type="file" className="form-control" multiple />
-          </div>
-
-          {/* Submit Button */}
-          <div className="text-center mt-4">
-            <button className="btn btn-primary px-5 py-2" onClick={AddNewProject}>
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-              Submit Project
-            </button>
-          </div>
-        </form>
-
-<<<<<<< HEAD
-        {/* Projects List */}
-        <div className="mt-5 bg-light p-4 rounded shadow">
-          <h3 className="text-center text-primary mb-4">Your Projects List</h3>
-          <div className="row">
-            {projectsList && projectsList.length > 0 ? (
-              projectsList.map((project) => (
-                <div key={project.project_id} className="col-md-6 mb-4">
-                  <div className="card h-100 border-primary">
-                    <div className="card-header bg-primary text-white">
-                      <h5 className="card-title mb-0">{project.project_name}</h5>
+            {/* Quick Stats */}
+            <div className="col-12 col-lg-6">
+              <div className="row g-2">
+                {stats.map((stat, index) => (
+                  <div key={index} className="col-6 col-sm-3">
+                    <div className="stat-card p-3 text-center rounded-4" style={{
+                      background: "rgba(255,255,255,0.15)",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255,255,255,0.2)",
+                    }}>
+                      <div className="fs-3 mb-1">{stat.icon}</div>
+                      <div className="fs-4 fw-bold text-white lh-1">{stat.value}</div>
+                      <div className="small text-white-50 fw-medium">{stat.label}</div>
                     </div>
-                    <div className="card-body">
-                      <div className="row mb-3">
-                        <div className="col-md-6">
-                          <h6 className="text-primary">Description:</h6>
-                          <p className="text-dark">{project.description}</p>
-                        </div>
-                        <div className="col-md-6">
-                          <h6 className="text-primary">Category:</h6>
-                          <p className="text-dark">{project.category}</p>
-                        </div>
-                      </div>
-                      <div className="row mb-3">
-                        <div className="col-md-6">
-                          <h6 className="text-primary">Deadline:</h6>
-                          <p className="text-dark">{project.deadline}</p>
-                        </div>
-                        <div className="col-md-6">
-                          <h6 className="text-primary">Expected Duration:</h6>
-                          <p className="text-dark">{project.expected_duration || "Not specified"}</p>
-                        </div>
-                      </div>
-                      {showDetails[project.project_id] && (
-                        <div className="row mt-3">
-                          <div className="col-md-6">
-                            <h6 className="text-primary">Priority Level:</h6>
-                            <p className="text-dark">{project.priority_level || "Not specified"}</p>
-                          </div>
-                          <div className="col-md-6">
-                            <h6 className="text-primary">Service Type:</h6>
-                            <p className="text-dark">{project.service_type || "Not specified"}</p>
-                          </div>
-                          <div className="col-md-6">
-                            <h6 className="text-primary">Payment Method:</h6>
-                            <p className="text-dark">{project.payment_method || "Not specified"}</p>
-                          </div>
-                          <div className="col-md-6">
-                            <h6 className="text-primary">Budget:</h6>
-                            <p className="text-dark">{project.budget || "Not specified"}</p>
-                          </div>
-                        </div>
-                      )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Wave */}
+        <div className="position-absolute bottom-0 start-0 end-0">
+          <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style={{ width: "100%", height: "60px", display: "block" }}>
+            <path d="M0,20 C360,50 1080,10 1440,30 L1440,60 L0,60 Z" fill="#f8fafc" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container" style={{ marginTop: "-30px" }}>
+        
+        {/* Form Section */}
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="bg-white rounded-4 shadow-lg overflow-hidden" style={{ border: "1px solid rgba(99,102,241,0.1)" }}>
+              {/* Form Header */}
+              <div className="p-4" style={{
+                background: isEditing 
+                  ? "linear-gradient(135deg, #f97316, #ef4444)"
+                  : "linear-gradient(135deg, #4f46e5, #8b5cf6)",
+              }}>
+                <div className="d-flex align-items-center justify-content-between ">
+                  <div className="d-flex align-items-center gap-3">
+                    <span className="fs-2">{isEditing ? "✏️" : "🚀"}</span>
+                    <div>
+                      <h2 className="text-white mb-1 fs-5 fw-bold pt-3 ">
+                        {isEditing ? "Edit Project" : "Create New Project"}
+                      </h2>
+                      <p className="text-white-50 mb-0 small">
+                        {isEditing ? "Update your project details below" : "Fill in the details to get started"}
+                      </p>
                     </div>
-                    <div className="card-footer bg-transparent border-top mt-auto">
-                      <div className="d-flex justify-content-between">
-                        <div className="btn-group">
-                          <button
-                            className="btn btn-primary btn-sm me-2"
-                            onClick={() => handleEditClick(project)}
-                          >
-                            <FaEdit className="me-1" /> Edit
-                          </button>
-                          <button
-                            className="btn btn-danger btn-sm me-2" 
-                            onClick={() => handleDeleteProject(project.project_id)}
-                          >
-                            <FaTrash className="me-1" /> Delete
-                          </button>
-                          <button
-                            className="btn btn-info btn-sm me-2"
-                            onClick={() => toggleDetails(project.project_id)}
-                          >
-                            <FaInfoCircle className="me-1" /> Details
-                          </button>
-                        </div>
-                      </div>
+                  </div>
+                  {isEditing && (
+                    <button
+                      onClick={cancelEdit}
+                      className="btn btn-light bg-white bg-opacity-20 border-0 rounded-3 p-2"
+                      style={{ color: "#fff" }}
+                    >
+                      {Ico.close}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="mx-4 mt-4 p-3 rounded-3" style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#dc2626" }}>
+                  <div className="d-flex align-items-center gap-3">
+                    <span className="fs-5">⚠️</span>
+                    {error}
+                  </div>
+                </div>
+              )}
+
+              {/* Form */}
+              <form onSubmit={handleSubmit} className="p-4">
+                <div className="row g-4">
+                  {/* Left Column */}
+                  <div className="col-md-6">
+                    <Label required icon={Ico.briefcase}>Project Name</Label>
+                    <input
+                      name="project_name"
+                      value={formData.project_name}
+                      onChange={hc}
+                      className="form-control rounded-3 py-3"
+                      placeholder="e.g., E-commerce Website"
+                    />
+
+                    <div className="mt-4">
+                      <Label required icon={Ico.tag}>Category</Label>
+                      <input
+                        name="category"
+                        value={formData.category}
+                        onChange={hc}
+                        className="form-control rounded-3 py-3"
+                        placeholder="e.g., Web Development"
+                      />
+                    </div>
+
+                    <div className="mt-4">
+                      <Label required icon={Ico.calendar}>Deadline</Label>
+                      <input
+                        name="deadline"
+                        value={formData.deadline}
+                        onChange={hc}
+                        type="date"
+                        className="form-control rounded-3 py-3"
+                      />
+                    </div>
+
+                    <div className="mt-4">
+                      <Label icon={Ico.clock}>Expected Duration</Label>
+                      <input
+                        name="expected_duration"
+                        value={formData.expected_duration}
+                        onChange={hc}
+                        className="form-control rounded-3 py-3"
+                        placeholder="e.g., 2 weeks"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="col-md-6">
+                    <Label icon={Ico.money}>Budget</Label>
+                    <input
+                      name="budget"
+                      value={formData.budget}
+                      onChange={hc}
+                      className="form-control rounded-3 py-3"
+                      placeholder="e.g., $5,000"
+                    />
+
+                    <div className="mt-4">
+                      <Label>Priority Level</Label>
+                      <select
+                        name="priority_level"
+                        value={formData.priority_level}
+                        onChange={hc}
+                        className="form-select rounded-3 py-3"
+                      >
+                        <option value="">Select priority...</option>
+                        <option value="Low">🟢 Low</option>
+                        <option value="Medium">🟡 Medium</option>
+                        <option value="High">🔴 High</option>
+                      </select>
+                    </div>
+
+                    <div className="mt-4">
+                      <Label>Service Type</Label>
+                      <input
+                        name="service_type"
+                        value={formData.service_type}
+                        onChange={hc}
+                        className="form-control rounded-3 py-3"
+                        placeholder="e.g., UI/UX Design"
+                      />
+                    </div>
+
+                    <div className="mt-4">
+                      <Label>Payment Method</Label>
+                      <select
+                        name="payment_method"
+                        value={formData.payment_method}
+                        onChange={hc}
+                        className="form-select rounded-3 py-3"
+                      >
+                        <option value="">Select payment method...</option>
+                        <option value="Bank Transfer">🏦 Bank Transfer</option>
+                        <option value="PayPal">💳 PayPal</option>
+                        <option value="Cash">💵 Cash</option>
+                      </select>
                     </div>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="col-12 text-center">
-                <p className="text-muted">
-                  You haven't added any projects yet. Add your first project using the form above!
+
+                {/* Full Width Description */}
+                <div className="mt-4">
+                  <Label required>Description</Label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={hc}
+                    rows="4"
+                    className="form-control rounded-3"
+                    placeholder="Describe your project in detail..."
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="mt-4 d-flex gap-3">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn btn-primary flex-grow-1 py-3 border-0 fw-semibold rounded-4"
+                    style={{
+                      background: isEditing
+                        ? "linear-gradient(135deg, #f97316, #ef4444)"
+                        : "linear-gradient(135deg, #4f46e5, #8b5cf6)",
+                      boxShadow: isEditing
+                        ? "0 8px 20px rgba(239,68,68,0.3)"
+                        : "0 8px 20px rgba(99,102,241,0.3)",
+                    }}
+                  >
+                    {loading ? (
+                      <div className="d-flex align-items-center justify-content-center gap-2">
+                        <div className="spinner-border spinner-border-sm" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                        Processing...
+                      </div>
+                    ) : (
+                      <div className="d-flex align-items-center justify-content-center gap-2">
+                        {isEditing ? Ico.check : Ico.plus}
+                        {isEditing ? "Update Project" : "Create Project"}
+                      </div>
+                    )}
+                  </button>
+                  {isEditing && (
+                    <button
+                      type="button"
+                      onClick={cancelEdit}
+                      className="btn btn-light py-3 px-4 fw-semibold rounded-4"
+                    >
+                      Cancel
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {/* Projects Section */}
+        <div className="row">
+          <div className="col-12">
+            <div className="d-flex align-items-center justify-content-between mb-4">
+              <h2 className="fs-4 fw-bold text-dark d-flex align-items-center gap-3">
+                Your Projects
+                <span className="badge bg-primary bg-gradient px-3 py-2 rounded-pill fs-6 fw-semibold">
+                  {projectsList.length} Total
+                </span>
+              </h2>
+            </div>
+
+            {fetching ? (
+              <div className="bg-white rounded-4 shadow-sm p-5 text-center">
+                <div className="spinner-border text-primary mb-3" style={{ width: "3rem", height: "3rem" }} role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="text-secondary">Loading your projects...</p>
+              </div>
+            ) : projectsList.length === 0 ? (
+              <div className="bg-white rounded-4 p-5 text-center border border-2 border-dashed">
+                <div className="display-1 mb-3">📁</div>
+                <h3 className="h5 fw-semibold text-dark mb-2">No Projects Yet</h3>
+                <p className="text-secondary mb-0 mx-auto" style={{ maxWidth: "400px" }}>
+                  Start by creating your first project using the form above. Your projects will appear here.
                 </p>
+              </div>
+            ) : (
+              <div className="row g-4">
+                {projectsList.map((proj, idx) => {
+                  const priority = PRIORITY[proj.priority_level];
+                  const isOpen = openCards[proj.id];
+
+                  return (
+                    <div key={proj.id} className="col-12 col-md-6 col-xl-4">
+                      <div className="project-card bg-white rounded-4 overflow-hidden h-100" style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.05)", border: "1px solid #e2e8f0" }}>
+                        {/* Priority Bar */}
+                        <div style={{
+                          height: "6px",
+                          background: priority
+                            ? `linear-gradient(90deg, ${priority.color}, ${priority.color}80)`
+                            : "linear-gradient(90deg, #6366f1, #8b5cf6)",
+                        }} />
+
+                        <div className="p-4">
+                          {/* Header */}
+                          <div className="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                              <h3 className="h6 fw-bold text-dark mb-2">
+                                {proj.project_name}
+                              </h3>
+                              <span className="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">
+                                {proj.category}
+                              </span>
+                            </div>
+                            {priority && (
+                              <span className="badge px-3 py-2 rounded-pill d-flex align-items-center gap-2" style={{ background: priority.bg, color: priority.color }}>
+                                <span className="rounded-circle" style={{ width: "8px", height: "8px", background: priority.dot }} />
+                                {proj.priority_level}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-secondary small mb-3" style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: isOpen ? "unset" : 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                          }}>
+                            {proj.description}
+                          </p>
+
+                          {/* Tags */}
+                          <div className="d-flex flex-wrap gap-2 mb-3">
+                            <Chip icon={Ico.calendar} value={proj.deadline} />
+                            <Chip icon={Ico.money} value={proj.budget} />
+                            {proj.expected_duration && (
+                              <Chip icon={Ico.clock} value={proj.expected_duration} />
+                            )}
+                          </div>
+
+                          {/* Expanded Details */}
+                          {isOpen && (
+                            <div className="bg-light rounded-3 p-3 mb-3">
+                              <div className="row g-3">
+                                {proj.service_type && (
+                                  <div className="col-6">
+                                    <p className="small text-secondary fw-semibold mb-1">SERVICE TYPE</p>
+                                    <p className="small text-dark fw-medium mb-0">{proj.service_type}</p>
+                                  </div>
+                                )}
+                                {proj.payment_method && (
+                                  <div className="col-6">
+                                    <p className="small text-secondary fw-semibold mb-1">PAYMENT METHOD</p>
+                                    <p className="small text-dark fw-medium mb-0">{proj.payment_method}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Actions */}
+                          <div className="d-flex gap-2 pt-3 border-top">
+                            <button
+                              className="action-btn btn btn-sm d-flex align-items-center gap-2 px-3 py-2 rounded-3 border-0 fw-semibold"
+                              onClick={() => startEdit(proj)}
+                              style={{ background: "#eef2ff", color: "#4f46e5" }}
+                            >
+                              {Ico.edit} Edit
+                            </button>
+                            <button
+                              className="action-btn btn btn-sm d-flex align-items-center gap-2 px-3 py-2 rounded-3 border-0 fw-semibold"
+                              onClick={() => handleDelete(proj.id)}
+                              style={{ background: "#fef2f2", color: "#dc2626" }}
+                            >
+                              {Ico.trash} Delete
+                            </button>
+                            <button
+                              className="action-btn btn btn-sm d-flex align-items-center gap-2 px-3 py-2 rounded-3 border-0 fw-semibold ms-auto"
+                              onClick={() => toggleCard(proj.id)}
+                              style={{ background: "#f1f5f9", color: "#475569" }}
+                            >
+                              {isOpen ? Ico.eyeOff : Ico.eye} {isOpen ? "Less" : "More"}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
         </div>
-=======
-        {/* add a new pro */}
-        <div className="container mt-4">
-          <div className="row">
-            {items.map((pro, index) => (
-              <div key={index} className="col-md-4 mb-4">
-                <div className="card">
-                  <div className="card-body text-start w-100">
-                    <h5 className="card-title text-primary">{pro.ProjectTitle}</h5>
-                    <p className="card-text"><strong>Deadline:</strong> {pro.Deadline}</p>
-                    <p className="card-text"><strong>Category:</strong> {pro.Category}</p>
-                    <p className="card-text"><strong>Description:</strong> {pro.ProjectDescription}</p>
-                  </div>
-                  <div className="d-flex   gap-2 p-3 w-100" style={{ alignItems: "flex-start", justifyItems: "flex-start" }}>
-                    <button className="btn btn-primary w-auto">Edit</button>
-                    <button className="btn btn-danger w-auto">Delete</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-
-
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
       </div>
+      
+      <div className="py-5" />
     </div>
   );
 };

@@ -1,125 +1,114 @@
-import React, { useEffect, useState } from 'react';
-<<<<<<< HEAD
-import { useNavigate } from 'react-router-dom';
-import ProfileClient from './profileclient/ProfileClient';
-import ProfileFreelancer from './profilefreelancer/ProfileFreelancer';
-=======
-import { useNavigate, Link } from 'react-router-dom';
-import { account } from '../user/appwrite';
-import { accountFreelancer} from '../user/appwritefreelancer'
-import ProfileClient from './profileclient/ProfileClient';
-import ProfileFreelancer from './profilefreelancer/ProfileFreelancer';
-import { toast } from 'react-toastify';
-import { FaUser, FaBriefcase } from 'react-icons/fa';
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-import Noprofile from './Noprofile';
+import React, { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import Noprofile from "./Noprofile";
+import { supabase } from "../../supabaseClient";
 
-const ProfileMe = () => {
-  const navigate = useNavigate();
-  const [userType, setUserType] = useState(null);
-  const [loading, setLoading] = useState(true);
+const Profileme = () => {
+  const [resolvedRole, setResolvedRole] = useState("loading");
 
   useEffect(() => {
-    const checkUser = async () => {
+    const resolveRole = async () => {
+      // 1. حاول تجيب الدور من localStorage أولاً (للسرعة)
+      const rawUser = localStorage.getItem("user");
       try {
-<<<<<<< HEAD
-        // Get user data from localStorage
-        const userData = localStorage.getItem("user");
-        const token = localStorage.getItem("token");
-        
-        if (!userData || !token) {
-          // No user data or token found - show Noprofile
-          setUserType(null);
-          setLoading(false);
+        const user = JSON.parse(rawUser || "{}");
+        const normalizedRole = String(user?.role || "").toLowerCase().trim();
+        if (normalizedRole === "freelancer") {
+          setResolvedRole("freelancer");
           return;
         }
-
-        const parsedUserData = JSON.parse(userData);
-        
-        // Check if user is freelancer
-        if (parsedUserData.role === 'freelancer' || parsedUserData.user_type === 'freelancer') {
-          setUserType('freelancer');
-          navigate('/profilefreelancer');
-        } else {
-          // If not freelancer, then it's a regular client
-          setUserType('client');
-          navigate('/profileclient');
+        if (normalizedRole === "client" || normalizedRole === "customer") {
+          setResolvedRole("client");
+          return;
         }
-        
-        setLoading(false);
-      } catch (error) {
-        console.error('Error checking user:', error);
-        setUserType(null);
-        setLoading(false);
+      } catch {
+        // لو في خطأ في JSON، نكمل للـ fallback
       }
+
+      // 2. لو مخزونش في localStorage، نجيب بيانات المستخدم من Supabase
+      //    نستخدم getSession() أولاً للتأكد من وجود session
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        setResolvedRole("none");
+        return;
+      }
+
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError || !authData?.user) {
+        setResolvedRole("none");
+        return;
+      }
+
+      const user = authData.user;
+      const userId = user.id;
+
+      // 3. ابحث في جدول clients
+      const { data: clientProfile } = await supabase
+        .from("clients")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (clientProfile) {
+        localStorage.setItem("user", JSON.stringify({ ...clientProfile, role: "client" }));
+        setResolvedRole("client");
+        return;
+      }
+
+      // 4. ابحث في جدول freelancers
+      const { data: freelancerProfile } = await supabase
+        .from("freelancers")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (freelancerProfile) {
+        localStorage.setItem("user", JSON.stringify({ ...freelancerProfile, role: "freelancer" }));
+        setResolvedRole("freelancer");
+        return;
+      }
+
+      // 5. لو ملقيناش بروفايل، نجرب user_metadata
+      const metaRole = String(user.user_metadata?.role || "").toLowerCase().trim();
+      if (metaRole === "client" || metaRole === "customer") {
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: user.id,
+            email: user.email,
+            name: user.user_metadata?.name || user.email?.split("@")[0],
+            role: "client",
+          })
+        );
+        setResolvedRole("client");
+        return;
+      }
+
+      if (metaRole === "freelancer") {
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: user.id,
+            email: user.email,
+            name: user.user_metadata?.name || user.email?.split("@")[0],
+            role: "freelancer",
+          })
+        );
+        setResolvedRole("freelancer");
+        return;
+      }
+
+      // 6. لو ملقتش أي حاجة، يبقى مفيش بروفايل
+      setResolvedRole("none");
     };
 
-    checkUser();
-  }, [navigate]);
-=======
-        const clientUser = await account.get();
-        if (clientUser) {
-          setUserType('client');
-          setLoading(false);
-          return;
-        }
-      } catch (error) {
-        console.error('Error checking client user:', error);
-      }
-
-      try {
-        const freelancerUser = await accountFreelancer.get();
-        if (freelancerUser) {
-          setUserType('freelancer');
-          setLoading(false);
-          return;
-        }
-      } catch (error) {
-        console.error('Error checking freelancer user:', error);
-      }
-
-      setUserType(null);
-      setLoading(false);
-      
-    };
-
-    checkUser();
+    resolveRole();
   }, []);
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
 
-  if (loading) {
-    return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }
-<<<<<<< HEAD
-
-  // If no user type (not logged in), show Noprofile
-  if (!userType) {
-    return <Noprofile />;
-  }
-
-  // Show appropriate profile based on user type
-=======
-  if (!userType) {
-    return (
-      <div className='  '>
-         <Noprofile />
-      </div>
-    );
-  }
-
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-  return (
-    <div className="container mt-5">
-      {userType === 'client' && <ProfileClient />}
-      {userType === 'freelancer' && <ProfileFreelancer />}
-    </div>
-  );
+  if (resolvedRole === "loading") return null;
+  if (resolvedRole === "freelancer") return <Navigate to="/profilefreelancer" replace />;
+  if (resolvedRole === "client") return <Navigate to="/profileclient" replace />;
+  return <Noprofile />;
 };
 
-export default ProfileMe;
+export default Profileme;

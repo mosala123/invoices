@@ -1,28 +1,42 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { supabase } from "../../../supabaseClient";
 
-export const catogeyproduct = createAsyncThunk("catogrySlise/catogeyproduct",async()=>{
-
-<<<<<<< HEAD
-const res= await fetch("http://localhost:3001/products")
-=======
-const res= await fetch("/api")
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-const data= await res.json()
-return data
-
-
-})
-
-
-export const catogrySlise= createSlice({
-    initialState:[],
-    name:"catogrySlise",
-    reducers:{},
-    extraReducers:(builder)=>{
-builder.addCase(catogeyproduct.fulfilled,(state,action)=>{
-    return action.payload
-})
+export const fetchCategories = createAsyncThunk(
+  "categorySlice/fetchCategories",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data, error } = await supabase.from("categories").select("*");
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
     }
-})
-export const {} = catogrySlise.actions
-export default catogrySlise.reducer
+  }
+);
+
+export const categorySlice = createSlice({
+  name: "categorySlice",
+  initialState: {
+    items: [],
+    loading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCategories.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCategories.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export default categorySlice.reducer;

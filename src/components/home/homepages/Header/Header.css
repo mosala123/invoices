@@ -1,49 +1,51 @@
 .header-section {
   background-color: #f8f9fa;
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
   position: relative;
 }
 
-.header-content h1 {
-  color: #2d3436;
+.header-section h1 {
   line-height: 1.2;
+  color: #2d3436;
 }
 
-.header-content .text-primary {
-  color: #0d6efd !important;
+.header-section .text-primary {
+  color: #4AC5B5 !important;
+  background: linear-gradient(135deg, #4AC5B5, #0d6efd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.image-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.blob-bg {
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  background: linear-gradient(135deg, rgba(13, 110, 253, 0.1) 0%, rgba(0, 209, 178, 0.1) 100%);
-  filter: blur(50px);
-  border-radius: 50%;
-  z-index: 0;
-}
-
-.z-index-1 {
-  z-index: 1;
-}
-
+/* تحسين Responsive للـ Header */
 @media (max-width: 991.98px) {
   .header-section {
-    text-align: center;
+    min-height: auto;
+    padding: 80px 0;
   }
-  .header-content .d-flex {
-    justify-content: center;
+  
+  .header-section .display-3 {
+    font-size: calc(2rem + 1.5vw);
   }
-  .blob-bg {
-    width: 300px;
-    height: 300px;
+  
+  .header-section .badge {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .header-section {
+    padding: 60px 0;
+  }
+  
+  .header-section .display-3 {
+    font-size: 2rem;
+  }
+  
+  .header-section .btn {
+    width: 100%;
+  }
+  
+  .header-section .d-flex {
+    flex-direction: column;
   }
 }

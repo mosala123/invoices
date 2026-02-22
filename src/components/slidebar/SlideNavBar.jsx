@@ -1,243 +1,210 @@
-import React, { useState, useEffect } from "react";
-<<<<<<< HEAD
+﻿import React, { useState, useEffect } from "react";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 import { TbReportSearch } from "react-icons/tb";
 import { RiMenu2Fill } from "react-icons/ri";
+import { MdOutlineReceipt } from "react-icons/md";
+import { FaFolderPlus } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import imageslide from "../../images/logo.svg";
 import "./SlideNavBar.css";
 import { AiOutlineInfoCircle, AiOutlineHome } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { supabase } from "../../supabaseClient";
 
 const SlideNavBar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
+  /* -- auto-collapse on small screens -- */
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 992) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-    };
-
+    const handleResize = () => setIsVisible(window.innerWidth > 992);
     handleResize();
-
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const toggleNavbar = () => {
-    setIsVisible(!isVisible);
-  };
-
-  const token = localStorage.getItem("token");
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
-=======
-import { CgProfile, CgAdd } from "react-icons/cg";
-import { TbReportSearch } from "react-icons/tb";
-import { RiMenu2Fill } from "react-icons/ri";
-import { Link, useLocation } from "react-router-dom";  
-import imageslide from "../../images/logo.svg";
-import "./SlideNavBar.css";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import { AiOutlineHome } from "react-icons/ai";
-import { LiaFileInvoiceSolid } from "react-icons/lia";
-import { FaCartShopping } from "react-icons/fa6";
-import { useSelector } from "react-redux";
-
-const SlideNavBar = () => {
-  const [isVisible, setIsVisible] = useState(window.innerWidth > 1080);
-  const location = useLocation();  
-
-  const toggleNavbar = () => {
-    if (window.innerWidth <= 1080) {
-      setIsVisible(!isVisible);
-    }
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsVisible(window.innerWidth > 1080);
-    };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const toggleNavbar = () => setIsVisible((v) => !v);
 
- const cart=useSelector((state)=>state.cart)
+  const token = localStorage.getItem("token");
+  const rawUser = localStorage.getItem("user");
 
+  let normalizedRole = "";
+  try {
+    normalizedRole = String(JSON.parse(rawUser || "{}")?.role || "").trim().toLowerCase();
+  } catch {
+    normalizedRole = "";
+  }
 
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
+  const isClient = normalizedRole === "client" || normalizedRole === "customer";
+  const isFreelancer = normalizedRole === "freelancer";
+  const isLoggedIn = !!token || !!rawUser || !!normalizedRole;
+
+  const profilePath = isClient
+    ? "/profileclient"
+    : isFreelancer
+      ? "/profilefreelancer"
+      : "/profile";
+
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Logout?",
+      text: "Are you sure you want to sign out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, logout",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+    });
+
+    if (!result.isConfirmed) return;
+
+    await supabase.auth.signOut();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
+  /* -- helper: is current path? -- */
+  const isActive = (path) => location.pathname === path;
+  const isProfileActive = () =>
+    isActive("/profile") || isActive("/profileclient") || isActive("/profilefreelancer");
 
   return (
     <div className={`slide-navbar ${isVisible ? "show" : ""}`}>
-      <div className="d-flex align-items-center justify-content-between w-100 mb-3">
-        <RiMenu2Fill className="slidemenu" onClick={toggleNavbar} />
-      </div>
-
+      {/* --- TOP: hamburger + logo --- */}
       <div className="slide-top">
-        <div className="d-flex gap-2 align-items-center Logo">
-<<<<<<< HEAD
-          <img src={imageslide} alt="Slide Navbar" className="img-fluid" />
+        {/* hamburger — only visible <=992 */}
+        <RiMenu2Fill className="slidemenu" onClick={toggleNavbar} />
+
+        <div className="slide-logo-wrap">
+          <img src={imageslide} alt="Logo" />
         </div>
-        
       </div>
 
+      {/* --- NAVIGATION --- */}
       <div className="slide-bottom">
-        <ul className="list-unstyled">
+        <ul>
+          {/* -- MAIN section -- */}
+          <li><span className="nav-section-title">Main</span></li>
+
           <li>
             <Link
               to="/"
-              className={`d-flex align-items-center gap-3 ${
-=======
-          <img src={imageslide} alt="Slide Navbar  " />
-        </div>
-      </div>
-
-      <div className="slide-bottom text-start">
-        <ul  >
-          <li  >
-            <Link  
-              to="/"
-              className={`d-flex gap-3 ${
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-                location.pathname === "/" ? "active" : ""
-              }`}
+              data-tip="Home"
+              className={`d-flex align-items-center gap-2 ${isActive("/") ? "active" : ""}`}
             >
-              <AiOutlineInfoCircle className="slideicons" />
-<<<<<<< HEAD
-              <span>Home</span>
-=======
-              <span className={isVisible ? "" : "d-none"}>Home</span>
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
+              <AiOutlineHome className="slideicons" />
+              <span className="nav-label">Home</span>
             </Link>
           </li>
+
           <li>
             <Link
               to="/about"
-<<<<<<< HEAD
-              className={`d-flex align-items-center gap-3 ${
-=======
-              className={`d-flex gap-3 ${
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-                location.pathname === "/about" ? "active" : ""
-              }`}
+              data-tip="About Us"
+              className={`d-flex align-items-center gap-2 ${isActive("/about") ? "active" : ""}`}
             >
-              <AiOutlineHome className="slideicons" />
-<<<<<<< HEAD
-              <span>About Us</span>
+              <AiOutlineInfoCircle className="slideicons" />
+              <span className="nav-label">About Us</span>
             </Link>
           </li>
 
-          {token && token !== "" && (
+          {/* -- INVOICES section (only when logged in) -- */}
+          {isLoggedIn && (isClient || isFreelancer) && (
             <>
+              <li><div className="nav-divider" /></li>
+              <li><span className="nav-section-title">Invoices</span></li>
+
+              <li>
+                {isClient ? (
+                  <Link
+                    to="/addanewpro"
+                    data-tip="Add Projects"
+                    className={`d-flex align-items-center gap-2 ${isActive("/addanewpro") ? "active" : ""}`}
+                  >
+                    <FaFolderPlus className="slideicons" />
+                    <span className="nav-label">Add Projects</span>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/create-invoice"
+                    data-tip="Create Invoice"
+                    className={`d-flex align-items-center gap-2 ${isActive("/create-invoice") ? "active" : ""}`}
+                  >
+                    <MdOutlineReceipt className="slideicons" />
+                    <span className="nav-label">Create Invoice</span>
+                  </Link>
+                )}
+              </li>
+            </>
+          )}
+
+          {/* -- ACCOUNT section (only when logged in) -- */}
+          {isLoggedIn && (isClient || isFreelancer) && (
+            <>
+              <li><div className="nav-divider" /></li>
+              <li><span className="nav-section-title">Account</span></li>
+
               <li>
                 <Link
                   to="/report"
-                  className={`d-flex align-items-center gap-3 ${
-                    location.pathname === "/report" ? "active" : ""
-                  }`}
+                  data-tip="Reports"
+                  className={`d-flex align-items-center gap-2 ${isActive("/report") ? "active" : ""}`}
                 >
                   <TbReportSearch className="slideicons" />
-                  <span>Reports</span>
+                  <span className="nav-label">Reports</span>
                 </Link>
               </li>
 
               <li>
+                <Link
+                  to={profilePath}
+                  data-tip="Profile"
+                  className={`d-flex align-items-center gap-2 ${isProfileActive() ? "active" : ""}`}
+                >
+                  <CgProfile className="slideicons" />
+                  <span className="nav-label">Profile</span>
+                </Link>
+              </li>
+
+              <li><div className="nav-divider" /></li>
+
+              <li>
                 <button
                   onClick={handleLogout}
-                  className="d-flex align-items-center gap-3 btn btn-link text-start p-0 w-100"
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  data-tip="Logout"
+                  className="nav-btn logout d-flex align-items-center gap-2"
                 >
                   <FaArrowRightFromBracket className="slideicons" />
-                  <span>Logout</span>
+                  <span className="nav-label">Logout</span>
                 </button>
               </li>
             </>
           )}
 
-          <li>
-            <Link
-              to="/profile"
-              className={`d-flex align-items-center gap-3 ${
-=======
-              <span className={isVisible ? "" : "d-none"}>About Us</span>
-            </Link>
-          </li>
-         
-          {/* <li>
-            <Link
-              to="/invoiceslist"
-              className={`d-flex gap-3 ${
-                location.pathname === "/invoiceslist" ? "active" : ""
-              }`}
-            >
-              <LiaFileInvoiceSolid className="slideicons" />
-              <span className={isVisible ? "" : "d-none"}>Invoices List</span>
-            </Link>
-          </li> */}
-          <li>
-            <Link
-              to="/report"
-              className={`d-flex gap-3 ${
-                location.pathname === "/report" ? "active" : ""
-              }`}
-            >
-              <TbReportSearch className="slideicons" />
-              <span className={isVisible ? "" : "d-none"}>Reports</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/profile"
-              className={`d-flex gap-3 ${
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-                location.pathname === "/profile" ? "active" : ""
-              }`}
-            >
-              <CgProfile className="slideicons" />
-<<<<<<< HEAD
-              <span>Profile</span>
-            </Link>
-          </li>
-=======
-              <span className={isVisible ? "" : "d-none"}>Profile</span>
-            </Link>
- 
-          </li>
-
-
-
-
- 
-
-
-
-
-
-
-
-
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
+          {/* profile visible when NOT logged in */}
+          {!isLoggedIn && (
+            <>
+              <li><div className="nav-divider" /></li>
+              <li>
+                <Link
+                  to="/profile"
+                  data-tip="Profile"
+                  className={`d-flex align-items-center gap-2 ${isActive("/profile") ? "active" : ""}`}
+                >
+                  <CgProfile className="slideicons" />
+                  <span className="nav-label">Profile</span>
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default SlideNavBar;
-=======
-export default SlideNavBar;
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885

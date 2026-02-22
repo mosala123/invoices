@@ -1,31 +1,62 @@
 .footer-section {
-  background-color: #1a1a1a !important;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4AC5B5, #0d6efd, #4AC5B5);
 }
 
 .footer-links a {
   transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
 }
 
 .footer-links a:hover {
-  color: #0d6efd !important;
+  color: #4AC5B5 !important;
   opacity: 1 !important;
-  padding-right: 5px;
+  transform: translateX(-5px);
 }
 
 .footer-section .form-control {
   background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
+  transition: all 0.3s ease;
 }
 
-.footer-section .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+.footer-section .form-control:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #4AC5B5;
+  box-shadow: 0 0 0 0.2rem rgba(74, 197, 181, 0.25);
 }
 
 .footer-section .btn-primary {
-  background-color: #0d6efd;
+  background: linear-gradient(135deg, #4AC5B5, #0d6efd);
   border: none;
+  transition: all 0.3s ease;
 }
 
 .footer-section .btn-primary:hover {
-  background-color: #0b5ed7;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(74, 197, 181, 0.3);
+}
+
+/* تحسين Responsive */
+@media (max-width: 768px) {
+  .footer-section {
+    text-align: center;
+  }
+  
+  .footer-links a:hover {
+    transform: translateX(0) scale(1.05);
+  }
 }

@@ -1,449 +1,540 @@
-import React from 'react';
-import { useState } from 'react';
-import imageprofile from "../../images/profile.webp"
-import { FaBolt, FaPaperPlane, FaChartLine } from "react-icons/fa";
-import { FiMail, FiPhone } from "react-icons/fi";
-import { FaTwitter, FaFacebook, FaLinkedin } from "react-icons/fa";
-import { FaUser, FaUserTie } from "react-icons/fa";
+﻿import React from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import imageprofile from "../../images/profile.webp";
+import { 
+  FaBolt, FaPaperPlane, FaChartLine, 
+  FaUser, FaUserTie, FaTwitter, FaFacebook, 
+  FaLinkedin, FaCheckCircle 
+} from "react-icons/fa";
+import { FiMail, FiPhone, FiSend } from "react-icons/fi";
+import './Noprofile.css';
+
 const Noprofile = () => {
+  // Animation Variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+
+  const fadeInLeft = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: { duration: 0.7, ease: "easeOut" }
+    }
+  };
+
+  const fadeInRight = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: { duration: 0.7, ease: "easeOut" }
+    }
+  };
+
+  const scaleIn = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
 
   return (
-    <div className="   " style={{paddingBottom:"0"}}   >
-
-
-
-  <div className="  text-dark py-5 p-2   ">
-      <div className="container   ">
-        <div className="row align-items-center  ">
-         
-          {/* Title, description, and CTA buttons */}
-          <div className="col-lg-7    text-center text-lg-start" style={{direction:"ltr"}}>
-            <h1 className="display-4 fw-bold mb-3">Automated Invoice System</h1>
-            <p className="lead mb-4">
-              A complete solution for creating and managing invoices automatically. Designed specifically for freelancers 
-              to help them organize their payments with ease and professionalism. Keep track of your transactions effortlessly 
-              and get detailed reports on your financial performance.
-            </p>
-            <p className="mb-4">
-              Whether you're handling multiple clients or managing recurring payments, our system ensures smooth, error-free 
-              invoicing with real-time status updates. Take control of your finances today!
-            </p>
-            <div className="d-flex flex-column flex-md-row gap-3 align-items-center"  >
-              <button className="btn btn-outline-primary btn-lg px-4">See How It Works</button>
-            </div>
-          </div>
-     {/* Illustration Image */}
-     <div className="col-lg-5 text-center mt-4 mt-lg-0">
-            <img
-              src={imageprofile}
-              alt="Invoice System"
-              className="img-fluid rounded shadow"
-            />
-          </div>
-        
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <section className="py-5 bg-light  ">
-      <div className="container">
-      <div className="text-center mb-2">
-          <h2 className="fw-bold">Welcome to Our Community! 🎉</h2>
-          <p className="text-muted fs-5">
-            Join thousands of users and freelancers building their future with us.  
-            Create an account and get started today!
-          </p>
-        </div>
-        <div className="row mt-5 d-flex   justify-content-center align-items-center "  style={{marginLeft:"1px "}}>
-          
-         
-        <div className="col-lg-5 col-md-12 mb-4 ">
-            <div className="card shadow-sm border-0 text-center p-4" style={{  display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <FaUser className="text-primary display-4 mb-3" />
-              <h5 className="fw-bold">Register as User</h5>
-              <p className="text-muted">Create an account to access all features.</p>
-              <Link to="/registerclient" className="btn btn-primary w-100">Sign Up</Link>
-            </div>
-          </div>
-
-          
-<<<<<<< HEAD
-          <div className="col-lg-5 col-md-12  mb-4">
-=======
-          <div className="col-lg-5 col-md-12  mb-2">
->>>>>>> 72ba0911a14b5f675ccb74eda87fc86f321a5885
-            <div className="card shadow-sm border-0 text-center p-4" style={{  display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <FaUserTie className="text-success display-4 mb-3" />
-              <h5 className="fw-bold">Register as Freelancer</h5>
-              <p className="text-muted">Join us as a freelancer and offer your services.</p>
-              <Link to="/registerfreelancer" className="btn btn-success w-100">Sign Up as Freelancer</Link>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-
-
-
-
- 
-
-    <section className=" py-5 bg-light">
-      <div className="container text-center">  
-        <h2 className="text-center mb-2 fw-bold mb-4">System Features</h2>
-        <div className="row justify-content-center g-4 align-items-center px-2" style={{alignItems:"center",marginLeft:"1px "}}>  
-          
-          {/* Feature 1: Automated Invoice Generation */}
-          <div className="col-md-4 col-sm-12 "  >
-            <div className="card h-100 border-0 shadow-sm text-center" >
-              <div className="card-body p-4">
-                <div className="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                  <FaBolt className="text-primary fs-2" />
-                </div>
-                <h4 className="card-title">Automated Invoice Generation</h4>
-                <p className="card-text">
-                  Create professional invoices with a single click based on your project data.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Feature 2: Direct Client Sending */}
-          <div className="col-md-4 col-sm-12">
-            <div className="card h-100 border-0 shadow-sm text-center"  >
-              <div className="card-body p-4">
-                <div className="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                  <FaPaperPlane className="text-success fs-2" />
-                </div>
-                <h4 className="card-title">Instant Client Delivery</h4>
-                <p className="card-text">
-                  Send invoices automatically via email for seamless transactions.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Feature 3: Financial Reports */}
-          <div className="col-md-4 col-sm-12">
-            <div className="card h-100 border-0 shadow-sm text-center" style={{width:"100%"}}>
-              <div className="card-body p-4">
-                <div className="bg-info bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                  <FaChartLine className="text-info fs-2" />
-                </div>
-                <h4 className="card-title">Detailed Financial Reports</h4>
-                <p className="card-text">
-                  Get insightful reports on your income and earnings monthly and annually.
-                </p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-
-
-
-
-
-
-    <section className="py-5  p-2 bg-light" style={{direction:"ltr"}}>
-  <div className="container">
-    <h2 className="text-center mb-5 fw-bold">How Does the System Work?</h2>
-    <div className="row g-4">
-      
-      {/* Step 1: Enter Project Details */}
-      <div className="col-md-3 col-6">
-        <div className="text-center">
-          <div className="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-               style={{ width: "50px", height: "50px" }}>
-            <span className="fs-4">1</span>
-          </div>
-          <h5>Enter Project Details</h5>
-          <p className="text-muted">Fill in the details of the project or provided service.</p>
-        </div>
-      </div>
-
-      {/* Step 2: Generate Invoice */}
-      <div className="col-md-3 col-6">
-        <div className="text-center">
-          <div className="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-               style={{ width: "50px", height: "50px" }}>
-            <span className="fs-4">2</span>
-          </div>
-          <h5>Generate Invoice</h5>
-          <p className="text-muted">The system automatically generates the invoice.</p>
-        </div>
-      </div>
-
-      {/* Step 3: Send to Client */}
-      <div className="col-md-3 col-6">
-        <div className="text-center">
-          <div className="bg-warning text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-               style={{ width: "50px", height: "50px" }}>
-            <span className="fs-4">3</span>
-          </div>
-          <h5>Send to Client</h5>
-          <p className="text-muted">Send the invoice via email or WhatsApp.</p>
-        </div>
-      </div>
-
-      {/* Step 4: Track Payment */}
-      <div className="col-md-3 col-6">
-        <div className="text-center">
-          <div className="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-               style={{ width: "50px", height: "50px" }}>
-            <span className="fs-4">4</span>
-          </div>
-          <h5>Track Payment</h5>
-          <p className="text-muted">Monitor invoice status and send reminders.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-
-
-
-
-
-
-<section className="py-5 bg-light" style={{ direction: "ltr" ,display:"flex",alignItems:"center",justifyContent:"center"}}>
-  <div className="container">
-    <h2 className="text-center mb-5 fw-bold text-primary">Why Choose Our System?</h2>
-    <div className="row align-items-center">
-
-      {/* Text Section on the Left */}
-      <div className="col-lg-6">
-        <ul className="list-unstyled">
-          <li className="mb-4 d-flex align-items-start">
-            <i className="bi bi-check-circle-fill text-success me-3 fs-4"></i>
-            <div>
-              <h5 className="fw-bold">Save 80% of Your Invoicing Time</h5>
-              <p className="text-muted mb-0">Automate your invoicing process and generate invoices in seconds, eliminating manual paperwork.</p>
-            </div>
-          </li>
-          <li className="mb-4 d-flex align-items-start">
-            <i className="bi bi-check-circle-fill text-success me-3 fs-4"></i>
-            <div>
-              <h5 className="fw-bold">Reduce Manual Accounting Errors</h5>
-              <p className="text-muted mb-0">Our system ensures accuracy in calculations, minimizing the risk of mistakes in financial records.</p>
-            </div>
-          </li>
-          <li className="mb-4 d-flex align-items-start">
-            <i className="bi bi-check-circle-fill text-success me-3 fs-4"></i>
-            <div>
-              <h5 className="fw-bold">Keep All Your Invoices Organized</h5>
-              <p className="text-muted mb-0">Access and manage all your invoices in one place, making tracking and retrieval easy and efficient.</p>
-            </div>
-          </li>
-          <li className="mb-4 d-flex align-items-start">
-            <i className="bi bi-check-circle-fill text-success me-3 fs-4"></i>
-            <div>
-              <h5 className="fw-bold">Generate Accurate Financial Reports</h5>
-              <p className="text-muted mb-0">Get detailed insights into your earnings and expenditures with automatically generated reports.</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      {/* Video Section on the Right */}
-      <div className="col-lg-6">
-        <div className="ratio ratio-16x9 shadow rounded">
-        <iframe
-  className="rounded border w-100"
-  width="560"
-  height="315"
-  src="https://www.youtube.com/embed/U19ugEMlcxI"
-  title="Why Invoicing is Important for Businesses"
-  frameBorder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen
-></iframe>
-
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
- 
-
- 
-
-
-
-<section className="py-5   text-start" dir="ltr">
-  <div className="container">
-    <h2 className="text-center mb-4 fw-bold text-primary">Comparison with Traditional Methods</h2>
-    <div className="table-responsive">
-      <table className="table table-bordered text-center">
-        <thead className="table-dark">
-          <tr>
-            <th width="30%">Criteria</th>
-            <th>Automated System</th>
-            <th>Traditional Method</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="fw-bold">Time Required</td>
-            <td className="text-success fw-bold">5 Minutes</td>
-            <td className="text-danger">1 Hour</td>
-          </tr>
-          <tr>
-            <td className="fw-bold">Accuracy</td>
-            <td className="text-success fw-bold">100%</td>
-            <td className="text-danger">Prone to Errors</td>
-          </tr>
-          <tr>
-            <td className="fw-bold">Organization</td>
-            <td className="text-success fw-bold">Centralized & Easily Searchable</td>
-            <td className="text-danger">Scattered Papers & Files</td>
-          </tr>
-          <tr>
-            <td className="fw-bold">Tracking</td>
-            <td className="text-success fw-bold">Automated</td>
-            <td className="text-danger">Manual</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-
-
-
-
-
-{/* 10. Frequently Asked Questions */}
-<section className="py-5 bg-light text-start" dir="ltr">
-  <div className="container">
-    <h2 className="text-center mb-5 fw-bold">Frequently Asked Questions</h2>
-    <div className="border rounded p-4 bg-white shadow-sm m-2">
-
-      {/* Question 1 */}
-      <div className="mb-4">
-        <h5 className="fw-bold">Is the system free?</h5>
-        <p>Yes, the basic version is free with limited features. There are also paid subscriptions for more advanced features.</p>
-      </div>
-
-      {/* Question 2 */}
-      <div className="mb-4">
-        <h5 className="fw-bold">How can I reset my password?</h5>
-        <p>You can click on "Forgot Password" on the login page and enter your email to receive a reset link.</p>
-      </div>
-
-      {/* Question 3 */}
-      <div className="mb-4">
-        <h5 className="fw-bold">Can I export invoices?</h5>
-        <p>Yes, the system supports exporting invoices in PDF and Excel formats.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-
-
-
-
-    
-  {/* 12. Contact Information */}
-  <section className="py-5 bg-primary text-white px-3" dir="ltr">
+    <div className="noprofile-page">
+      {/* Hero Section */}
+      <motion.section 
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+        className="hero-section py-5"
+      >
         <div className="container">
-          <div className="row">
+          <div className="row align-items-center min-vh-50">
+            <motion.div 
+              variants={fadeInLeft}
+              className="col-lg-7 text-center text-lg-start"
+            >
+              <motion.h1 
+                variants={fadeInUp}
+                className="display-4 fw-bold mb-3 gradient-text"
+              >
+                Automated Invoice System
+              </motion.h1>
+              
+              <motion.p 
+                variants={fadeInUp}
+                className="lead mb-4 text-secondary"
+              >
+                A complete solution for creating and managing invoices automatically. 
+                Designed specifically for freelancers to help them organize their payments 
+                with ease and professionalism.
+              </motion.p>
+              
+              <motion.p 
+                variants={fadeInUp}
+                className="mb-4 text-secondary"
+              >
+                Whether you're handling multiple clients or managing recurring payments, 
+                our system ensures smooth, error-free invoicing with real-time status updates.
+              </motion.p>
+              
+              <motion.div 
+                variants={fadeInUp}
+                className="d-flex flex-column flex-md-row gap-3 align-items-center"
+              >
+                <motion.button 
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(74, 197, 181, 0.3)" }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn btn-outline-primary btn-lg px-5 rounded-pill"
+                  style={{ borderColor: '#4AC5B5', color: '#4AC5B5' }}
+                >
+                  See How It Works
+                </motion.button>
+              </motion.div>
+            </motion.div>
 
-            {/* Contact Us */}
-            <div className="col-md-4 mb-4 mb-md-0">
-              <h5>Contact Us</h5>
+            <motion.div 
+              variants={fadeInRight}
+              className="col-lg-5 text-center mt-4 mt-lg-0"
+            >
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="image-wrapper position-relative"
+              >
+                <div className="blob-bg"></div>
+                <img
+                  src={imageprofile}
+                  alt="Invoice System"
+                  className="img-fluid rounded-4 shadow-lg position-relative"
+                  style={{ zIndex: 1 }}
+                />
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Welcome Section */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={staggerContainer}
+        className="welcome-section py-5"
+      >
+        <div className="container">
+          <motion.div variants={fadeInUp} className="text-center mb-5">
+            <span className="badge bg-primary bg-opacity-10 rounded-pill px-4 py-2 mb-3" 
+                  style={{ color: '#4AC5B5', border: '1px solid rgba(74, 197, 181, 0.2)' }}>
+              🎉 Welcome to Our Community
+            </span>
+            <h2 className="fw-bold display-6 mb-3">Join Thousands of Freelancers</h2>
+            <p className="text-secondary fs-5 mx-auto" style={{ maxWidth: '700px' }}>
+              Join thousands of users and freelancers building their future with us.
+              Create an account and get started today!
+            </p>
+          </motion.div>
+
+          <div className="row justify-content-center g-4">
+            <motion.div variants={scaleIn} className="col-lg-5 col-md-6">
+              <motion.div 
+                whileHover={{ y: -10 }}
+                transition={{ type: "spring", stiffness: 400 }}
+                className="card border-0 rounded-4 p-4 h-100 text-center shadow-sm"
+              >
+                <motion.div 
+                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                  style={{ 
+                    width: '70px', 
+                    height: '70px', 
+                    background: 'rgba(74, 197, 181, 0.1)',
+                    color: '#4AC5B5'
+                  }}
+                >
+                  <FaUser className="fs-2" />
+                </motion.div>
+                <h4 className="fw-bold mb-3">Register as User</h4>
+                <p className="text-secondary mb-4">Create an account to access all features and manage your invoices.</p>
+                <Link 
+                  to="/registerclient" 
+                  className="btn btn-primary rounded-pill py-2 mt-auto"
+                  style={{ background: '#4AC5B5', borderColor: '#4AC5B5' }}
+                >
+                  Sign Up as User
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            <motion.div variants={scaleIn} className="col-lg-5 col-md-6">
+              <motion.div 
+                whileHover={{ y: -10 }}
+                transition={{ type: "spring", stiffness: 400 }}
+                className="card border-0 rounded-4 p-4 h-100 text-center shadow-sm"
+              >
+                <motion.div 
+                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                  style={{ 
+                    width: '70px', 
+                    height: '70px', 
+                    background: 'rgba(13, 110, 253, 0.1)',
+                    color: '#0d6efd'
+                  }}
+                >
+                  <FaUserTie className="fs-2" />
+                </motion.div>
+                <h4 className="fw-bold mb-3">Register as Freelancer</h4>
+                <p className="text-secondary mb-4">Join as a freelancer and offer your services with professional invoicing.</p>
+                <Link 
+                  to="/registerfreelancer" 
+                  className="btn btn-primary rounded-pill py-2 mt-auto"
+                  style={{ background: '#0d6efd', borderColor: '#0d6efd' }}
+                >
+                  Sign Up as Freelancer
+                </Link>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Features Section */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={staggerContainer}
+        className="features-section py-5 bg-light"
+      >
+        <div className="container">
+          <motion.div variants={fadeInUp} className="text-center mb-5">
+            <span className="badge bg-primary bg-opacity-10 rounded-pill px-4 py-2 mb-3"
+                  style={{ color: '#4AC5B5', border: '1px solid rgba(74, 197, 181, 0.2)' }}>
+              ✨ System Features
+            </span>
+            <h2 className="fw-bold display-6 mb-3">Everything You Need</h2>
+            <p className="text-secondary fs-5">Powerful tools to streamline your invoicing process</p>
+          </motion.div>
+
+          <div className="row g-4">
+            {[
+              { icon: <FaBolt />, title: "Automated Invoice Generation", desc: "Create professional invoices with a single click based on your project data.", color: "#4AC5B5" },
+              { icon: <FaPaperPlane />, title: "Instant Client Delivery", desc: "Send invoices automatically via email for seamless transactions.", color: "#0d6efd" },
+              { icon: <FaChartLine />, title: "Detailed Financial Reports", desc: "Get insightful reports on your income and earnings monthly and annually.", color: "#6f42c1" }
+            ].map((feature, index) => (
+              <motion.div key={index} variants={scaleIn} className="col-md-4">
+                <motion.div 
+                  whileHover={{ y: -10, boxShadow: `0 20px 30px ${feature.color}20` }}
+                  className="card border-0 rounded-4 p-4 h-100 text-center feature-card"
+                  style={{ borderBottom: `3px solid ${feature.color}` }}
+                >
+                  <motion.div 
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.5 }}
+                    className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
+                    style={{ 
+                      width: '70px', 
+                      height: '70px', 
+                      background: `${feature.color}15`,
+                      color: feature.color 
+                    }}
+                  >
+                    <span className="fs-2">{feature.icon}</span>
+                  </motion.div>
+                  <h4 className="fw-bold mb-3">{feature.title}</h4>
+                  <p className="text-secondary mb-0">{feature.desc}</p>
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* How It Works */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={staggerContainer}
+        className="how-it-works py-5"
+      >
+        <div className="container">
+          <motion.div variants={fadeInUp} className="text-center mb-5">
+            <h2 className="fw-bold display-6 mb-3">How Does It Work?</h2>
+            <p className="text-secondary fs-5">Four simple steps to professional invoicing</p>
+          </motion.div>
+
+          <div className="row g-4">
+            {[
+              { num: 1, title: "Enter Project Details", desc: "Fill in the details of the project or service", color: "#4AC5B5" },
+              { num: 2, title: "Generate Invoice", desc: "System automatically generates the invoice", color: "#0d6efd" },
+              { num: 3, title: "Send to Client", desc: "Send via email or WhatsApp instantly", color: "#FFB347" },
+              { num: 4, title: "Track Payment", desc: "Monitor status and send reminders", color: "#FF6B6B" }
+            ].map((step, index) => (
+              <motion.div key={index} variants={scaleIn} className="col-md-3 col-6">
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="text-center step-card"
+                >
+                  <motion.div 
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                    style={{ 
+                      width: '60px', 
+                      height: '60px', 
+                      background: step.color,
+                      color: 'white',
+                      fontSize: '1.5rem',
+                      fontWeight: 'bold',
+                      boxShadow: `0 10px 20px ${step.color}40`
+                    }}
+                  >
+                    {step.num}
+                  </motion.div>
+                  <h5 className="fw-bold mb-2">{step.title}</h5>
+                  <p className="text-secondary small">{step.desc}</p>
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Why Choose Us */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={staggerContainer}
+        className="why-choose-us py-5 bg-light"
+      >
+        <div className="container">
+          <div className="row align-items-center g-5">
+            <motion.div variants={fadeInLeft} className="col-lg-6">
+              <h2 className="fw-bold display-6 mb-4 gradient-text">Why Choose Our System?</h2>
+              
+              {[
+                "Save 80% of Your Invoicing Time",
+                "Reduce Manual Accounting Errors",
+                "Keep All Your Invoices Organized",
+                "Generate Accurate Financial Reports"
+              ].map((item, index) => (
+                <motion.div 
+                  key={index}
+                  variants={fadeInUp}
+                  className="d-flex align-items-start mb-4"
+                  whileHover={{ x: 10 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <FaCheckCircle className="text-success fs-4 me-3 flex-shrink-0" style={{ color: '#4AC5B5' }} />
+                  <div>
+                    <h5 className="fw-bold mb-1">{item}</h5>
+                    <p className="text-secondary mb-0">
+                      {index === 0 && "Automate your invoicing process and generate invoices in seconds, eliminating manual paperwork."}
+                      {index === 1 && "Our system ensures accuracy in calculations, minimizing the risk of mistakes in financial records."}
+                      {index === 2 && "Access and manage all your invoices in one place, making tracking and retrieval easy and efficient."}
+                      {index === 3 && "Get detailed insights into your earnings and expenditures with automatically generated reports."}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <motion.div variants={fadeInRight} className="col-lg-6">
+              <div className="ratio ratio-16x9 rounded-4 overflow-hidden shadow-lg video-wrapper">
+                <iframe
+                  className="rounded-4"
+                  src="https://www.youtube.com/embed/U19ugEMlcxI"
+                  title="Why Invoicing is Important"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Comparison Table */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={staggerContainer}
+        className="comparison-section py-5"
+      >
+        <div className="container">
+          <motion.div variants={fadeInUp} className="text-center mb-5">
+            <h2 className="fw-bold display-6 mb-3">Comparison with Traditional Methods</h2>
+          </motion.div>
+
+          <motion.div variants={scaleIn} className="table-responsive">
+            <table className="table table-hover align-middle comparison-table">
+              <thead>
+                <tr>
+                  <th className="p-3">Criteria</th>
+                  <th className="p-3">Automated System</th>
+                  <th className="p-3">Traditional Method</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { criteria: "Time Required", auto: "5 Minutes", autoColor: "text-success", trad: "1 Hour", tradColor: "text-danger" },
+                  { criteria: "Accuracy", auto: "100%", autoColor: "text-success", trad: "Prone to Errors", tradColor: "text-danger" },
+                  { criteria: "Organization", auto: "Centralized & Searchable", autoColor: "text-success", trad: "Scattered Files", tradColor: "text-danger" },
+                  { criteria: "Tracking", auto: "Automated", autoColor: "text-success", trad: "Manual", tradColor: "text-danger" }
+                ].map((row, index) => (
+                  <motion.tr 
+                    key={index}
+                    whileHover={{ scale: 1.01, backgroundColor: 'rgba(74, 197, 181, 0.05)' }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <td className="fw-bold p-3">{row.criteria}</td>
+                    <td className={`fw-bold ${row.autoColor} p-3`}>{row.auto}</td>
+                    <td className={`fw-bold ${row.tradColor} p-3`}>{row.trad}</td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* FAQ Section */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={staggerContainer}
+        className="faq-section py-5 bg-light"
+      >
+        <div className="container">
+          <motion.div variants={fadeInUp} className="text-center mb-5">
+            <h2 className="fw-bold display-6 mb-3">Frequently Asked Questions</h2>
+          </motion.div>
+
+          <div className="row justify-content-center">
+            <div className="col-lg-8">
+              {[
+                { q: "Is the system free?", a: "Yes, the basic version is free with limited features. Paid subscriptions are available for advanced features." },
+                { q: "How can I reset my password?", a: "Click on 'Forgot Password' on the login page and enter your email to receive a reset link." },
+                { q: "Can I export invoices?", a: "Yes, the system supports exporting invoices in PDF and Excel formats." }
+              ].map((faq, index) => (
+                <motion.div 
+                  key={index}
+                  variants={fadeInUp}
+                  whileHover={{ y: -5, boxShadow: '0 15px 30px rgba(74, 197, 181, 0.15)' }}
+                  className="card border-0 rounded-4 p-4 mb-3 shadow-sm faq-card"
+                >
+                  <h5 className="fw-bold mb-2" style={{ color: '#4AC5B5' }}>{faq.q}</h5>
+                  <p className="text-secondary mb-0">{faq.a}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Contact Section */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={staggerContainer}
+        className="contact-section py-5 text-white"
+        style={{ background: 'linear-gradient(135deg, #4AC5B5 0%, #0d6efd 100%)' }}
+      >
+        <div className="container">
+          <div className="row g-4">
+            <motion.div variants={fadeInUp} className="col-md-4">
+              <h5 className="fw-bold mb-3">Contact Us</h5>
               <ul className="list-unstyled">
-                <li className="mb-2">
+                <li className="mb-2 d-flex align-items-center">
                   <FiMail className="me-2" /> support@invoicesystem.com
                 </li>
-                <li className="mb-2">
+                <li className="mb-2 d-flex align-items-center">
                   <FiPhone className="me-2" /> +966 12 345 6789
                 </li>
               </ul>
-            </div>
+            </motion.div>
 
-            {/* Social Media */}
-            <div className="col-md-4 mb-4 mb-md-0">
-              <h5>Follow Us</h5>
+            <motion.div variants={fadeInUp} className="col-md-4">
+              <h5 className="fw-bold mb-3">Follow Us</h5>
               <div className="d-flex gap-3">
-                <a href="#" className="text-white">
-                  <FaTwitter className="fs-4" />
-                </a>
-                <a href="#" className="text-white">
-                  <FaFacebook className="fs-4" />
-                </a>
-                <a href="#" className="text-white">
-                  <FaLinkedin className="fs-4" />
-                </a>
+                {[FaTwitter, FaFacebook, FaLinkedin].map((Icon, index) => (
+                  <motion.a
+                    key={index}
+                    href="#"
+                    whileHover={{ scale: 1.2, y: -5 }}
+                    className="text-white"
+                  >
+                    <Icon className="fs-4" />
+                  </motion.a>
+                ))}
               </div>
-            </div>
+            </motion.div>
 
-            {/* Newsletter */}
-            <div className="col-md-4">
-              <h5>Newsletter</h5>
-              <div className="input-group mb-3">
+            <motion.div variants={fadeInUp} className="col-md-4">
+              <h5 className="fw-bold mb-3">Newsletter</h5>
+              <div className="input-group">
                 <input 
                   type="email" 
-                  className="form-control" 
-                  placeholder="Your Email" 
+                  className="form-control rounded-pill-start border-0"
+                  placeholder="Your Email"
+                  style={{ padding: '0.75rem 1.5rem' }}
                 />
-                <button className="btn btn-light" type="button">
-                  Subscribe
-                </button>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn btn-light rounded-pill-end px-4 fw-bold"
+                  style={{ color: '#4AC5B5' }}
+                >
+                  <FiSend />
+                </motion.button>
               </div>
-            </div>
-
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* 14. Footer */}
+      {/* Footer */}
       <footer className="py-4 bg-dark text-white">
         <div className="container">
-          <div className="row">
-
-            {/* Copyright */}
+          <div className="row align-items-center">
             <div className="col-md-6 text-center text-md-start">
-              <p className="mb-0">© 2024 Invoice System. All rights reserved.</p>
+              <p className="mb-0 opacity-75">© 2024 Invoice System. All rights reserved.</p>
             </div>
-
-            {/* Legal Links */}
             <div className="col-md-6 text-center text-md-end">
-              <a href="#" className="text-white text-decoration-none me-3">Terms & Conditions</a>
-              <a href="#" className="text-white text-decoration-none">Privacy Policy</a>
+              <a href="#" className="text-white text-decoration-none me-3 opacity-75 hover-opacity-100">Terms & Conditions</a>
+              <a href="#" className="text-white text-decoration-none opacity-75 hover-opacity-100">Privacy Policy</a>
             </div>
-
           </div>
         </div>
       </footer>
-
-
-
-
-
-
-
-
-    
     </div>
   );
 };
