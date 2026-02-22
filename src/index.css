@@ -37,18 +37,33 @@
   --bold2-weight: 700;
 
   /* Ø§Ù„Ø£Ù„ÙˆØ§Ù† */
-  --primary-color: #0d6efd;      /* Bootstrap primary */
+  --primary-color: #0d6efd;
   --secondary-color: #0852ac;
-  --accent-color: rgba(74, 197, 181, 1);
-  --accent-hover: rgb(115, 219, 205);
-  --accent-active: rgb(150, 225, 215);
+  --accent-color: #4ac5b5;
+  --accent-hover: #66d3c6;
+  --accent-active: #84ddd2;
+  --site-bg: linear-gradient(135deg, #f8fbff 0%, #eef5ff 48%, #e7f8f4 100%);
+  --surface-bg: #ffffff;
   --text-color: #ffffff;
-  --text-muted: #6c757d;          /* Bootstrap text-muted */
-  --card-bg: #f8f9fa;             /* Bootstrap light */
+  --text-muted: #6c757d;
+  --card-bg: #f8f9fa;
   --border-color: #dee2e6;
   --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 1rem 2rem rgba(0, 0, 0, 0.175);
+  --motion-speed: 0.25s;
+  --motion-curve: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Bootstrap tone unification */
+  --bs-primary: var(--primary-color);
+  --bs-primary-rgb: 13, 110, 253;
+  --bs-success: var(--accent-color);
+  --bs-success-rgb: 74, 197, 181;
+  --bs-info: #3aa6ff;
+  --bs-link-color: var(--primary-color);
+  --bs-link-hover-color: var(--secondary-color);
+  --bs-body-bg: transparent;
+  --bs-body-color: #122033;
 
   /* Ø£Ø­Ø¬Ø§Ù… Ø§Ù„Ø´Ø¹Ø§Ø± */
   --logo-width: 160px;
@@ -109,7 +124,7 @@
   border-radius: 200px;
   padding: 15px 30px;
   width: 260px;
-  transition: background 0.3s ease, transform 0.2s;
+  transition: background var(--motion-speed) var(--motion-curve), transform var(--motion-speed) var(--motion-curve);
 }
 
 .Allbtn1:hover {
@@ -131,7 +146,7 @@
   font-size: var(--nav-button-size);
   font-weight: var(--nav-button-weight);
   border: none;
-  transition: background 0.3s, transform 0.2s;
+  transition: background var(--motion-speed) var(--motion-curve), transform var(--motion-speed) var(--motion-curve);
 }
 
 .Allbtns:hover {
@@ -151,7 +166,7 @@
   box-shadow: var(--shadow-sm);
   padding: 2rem;
   margin-bottom: 2rem;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow var(--motion-speed) var(--motion-curve);
 }
 
 .section-card:hover {
@@ -164,7 +179,7 @@
   border-radius: 0.5rem;
   box-shadow: var(--shadow-sm);
   height: 100%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform var(--motion-speed) var(--motion-curve), box-shadow var(--motion-speed) var(--motion-curve);
 }
 
 .team-card:hover {
@@ -203,6 +218,42 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+body {
+  min-height: 100vh;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #122033;
+  background: var(--site-bg);
+}
+
+a,
+.btn,
+.card,
+.form-control,
+.form-select {
+  transition-duration: var(--motion-speed);
+  transition-timing-function: var(--motion-curve);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.auth-visual-panel {
+  min-height: 280px;
+}
+
+@media (max-width: 992px) {
+  .auth-visual-panel {
+    min-height: 220px;
+    padding: 24px 20px !important;
+  }
+
+  .auth-visual-panel img {
+    max-width: 52% !important;
+  }
+}
+
 /* ØªÙ†Ø³ÙŠÙ‚ Ø´Ø±ÙŠØ· Ø§Ù„ØªÙ…Ø±ÙŠØ± (Ø§Ø®ØªÙŠØ§Ø±ÙŠ) */
 ::-webkit-scrollbar {
   width: 8px;
@@ -221,4 +272,3 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-color);
 }
-

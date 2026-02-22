@@ -1,45 +1,63 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { FiUsers, FiClock, FiCheckCircle, FiGlobe } from "react-icons/fi";
+import { FiUsers, FiClock, FiCheckCircle, FiGlobe, FiTrendingUp, FiAward } from "react-icons/fi";
 import "./Stats.css";
 
 const Stats = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
+  // ألوان محسنة - أكثر عصرية وتناسقاً
+  const colors = {
+    primary: "#6366f1", // Indigo
+    secondary: "#8b5cf6", // Purple
+    accent1: "#06b6d4", // Cyan
+    accent2: "#10b981", // Emerald
+    gradient1: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    gradient2: "linear-gradient(135deg, #06b6d4, #10b981)"
+  };
+
   const statsData = [
     { 
-      value: 10500, 
+      value: 12500, 
       label: "Freelancers and teams trust us", 
       suffix: "+", 
-      color: "#4AC5B5",
-      icon: <FiUsers className="stat-icon" />
+      color: colors.primary,
+      gradient: colors.gradient1,
+      icon: <FiUsers className="stat-icon" />,
+      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=100&h=100&fit=crop&auto=format" // صورة تعاون
     },
     { 
-      value: 68, 
+      value: 76, 
       label: "Time saved on invoicing", 
       suffix: "%", 
-      color: "#0d6efd",
-      icon: <FiClock className="stat-icon" />
+      color: colors.accent1,
+      gradient: "linear-gradient(135deg, #06b6d4, #0891b2)",
+      icon: <FiClock className="stat-icon" />,
+      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=100&h=100&fit=crop&auto=format" // صورة وقت
     },
     { 
-      value: 250000, 
+      value: 350000, 
       label: "Successful financial operations", 
       suffix: "+", 
-      color: "#4AC5B5",
-      icon: <FiCheckCircle className="stat-icon" />
+      color: colors.accent2,
+      gradient: "linear-gradient(135deg, #10b981, #059669)",
+      icon: <FiCheckCircle className="stat-icon" />,
+      image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=100&h=100&fit=crop&auto=format" // صورة نجاح
     },
     { 
-      value: 85, 
+      value: 95, 
       label: "Countries served", 
       suffix: "+", 
-      color: "#0d6efd",
-      icon: <FiGlobe className="stat-icon" />
+      color: colors.secondary,
+      gradient: colors.gradient1,
+      icon: <FiGlobe className="stat-icon" />,
+      image: "https://images.unsplash.com/photo-1526495124232-a04e1849168c?w=100&h=100&fit=crop&auto=format" // صورة عالم
     },
   ];
 
-  // Counter Component
-  const Counter = ({ end, duration = 2.5 }) => {
+  // Counter Component محسن
+  const Counter = ({ end, duration = 2.5, delay = 0 }) => {
     const [count, setCount] = useState(0);
     const countRef = useRef(null);
     const isCountInView = useInView(countRef, { once: true });
@@ -48,23 +66,24 @@ const Stats = () => {
     useEffect(() => {
       if (isCountInView && !hasAnimated) {
         setHasAnimated(true);
-        let start = 0;
-        const increment = end / (duration * 60);
-        const timer = setInterval(() => {
-          start += increment;
-          if (start >= end) {
-            setCount(end);
-            clearInterval(timer);
-          } else {
-            setCount(Math.floor(start));
-          }
-        }, 1000 / 60);
+        setTimeout(() => {
+          let start = 0;
+          const increment = end / (duration * 60);
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, 1000 / 60);
 
-        return () => clearInterval(timer);
+          return () => clearInterval(timer);
+        }, delay * 1000);
       }
-    }, [isCountInView, end, duration, hasAnimated]);
+    }, [isCountInView, end, duration, hasAnimated, delay]);
 
-    // Format number with commas
     const formatNumber = (num) => {
       if (num >= 1000000) {
         return (num / 1000000).toFixed(1) + 'M';
@@ -74,60 +93,72 @@ const Stats = () => {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
-    return <span ref={countRef}>{formatNumber(count)}</span>;
+    return <span ref={countRef} className="counter-value">{formatNumber(count)}</span>;
   };
 
-  // Variants for animations
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         staggerChildren: 0.15,
-        delayChildren: 0.2,
+        delayChildren: 0.3,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 },
+      transition: { type: "spring", stiffness: 80, damping: 15 },
     },
   };
 
   return (
     <div className="stats-section py-5 overflow-hidden" ref={ref}>
-      <div className="container">
-        {/* Header */}
+      {/* خلفية متحركة */}
+      <div className="stats-background">
+        <div className="gradient-orb orbl"></div>
+        <div className="gradient-orb orb2"></div>
+        <div className="gradient-orb orb3"></div>
+      </div>
+
+      <div className="container position-relative">
+        {/* Header محسن */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
           className="text-center mb-5"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.1 }}
-            className="badge bg-primary bg-opacity-10 rounded-pill px-4 py-2 mb-3"
-            style={{ color: "#4AC5B5", border: "1px solid rgba(74, 197, 181, 0.2)" }}
+            transition={{ delay: 0.2, type: "spring" }}
+            className="stats-badge"
           >
-            📊 Platform Stats
+            <FiTrendingUp className="me-2" /> 📊 Real-Time Statistics
           </motion.span>
 
-          <h2 className="fw-bold display-6 mb-3">
-            Numbers That <span className="gradient-text">Show Results</span>
+          <h2 className="stats-title display-6 fw-bold mb-3">
+            Growth in <span className="gradient-text-main">Numbers</span>
           </h2>
 
-          <p className="text-secondary fs-5 mx-auto" style={{ maxWidth: "600px" }}>
-            Track performance and run your business with confidence.
-          </p>
+          <motion.p 
+            className="stats-subtitle text-secondary fs-5 mx-auto"
+            style={{ maxWidth: "600px" }}
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.3 }}
+          >
+            Track performance and run your business with confidence. 
+            Join thousands of satisfied users worldwide.
+          </motion.p>
         </motion.div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards محسنة */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -142,102 +173,102 @@ const Stats = () => {
             >
               <motion.div
                 whileHover={{ 
-                  y: -8, 
-                  boxShadow: `0 20px 40px ${stat.color}20`,
+                  y: -12, 
+                  boxShadow: `0 30px 50px ${stat.color}25`,
                 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                className="stat-card p-4 text-center rounded-4 bg-white h-100 position-relative overflow-hidden"
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="stat-card-enhanced p-4 text-center rounded-4 h-100"
               >
-                {/* Colored line on top */}
+                {/* صورة مصغرة في الخلفية */}
                 <div 
-                  className="position-absolute top-0 start-0 w-100"
-                  style={{ 
-                    height: "4px", 
-                    background: stat.color,
-                    opacity: 0.3
+                  className="stat-card-bg-image"
+                  style={{
+                    backgroundImage: `url(${stat.image})`,
+                    opacity: 0.03
                   }}
                 />
 
-                {/* Icon Circle - صغير ومناسب */}
+                {/* أيقونة محسنة */}
                 <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={isInView ? { scale: 1, opacity: 1 } : {}}
-                  transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 300 }}
-                  className="d-flex align-items-center justify-content-center mx-auto mb-3"
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    background: `${stat.color}15`,
-                    borderRadius: "50%",
-                    color: stat.color,
-                    fontSize: "1.5rem",
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={isInView ? { scale: 1, rotate: 0 } : {}}
+                  transition={{ 
+                    delay: index * 0.1 + 0.3, 
+                    type: "spring", 
+                    stiffness: 200,
+                    damping: 15
+                  }}
+                  className="stat-icon-wrapper mx-auto mb-3"
+                  style={{ 
+                    background: `linear-gradient(145deg, ${stat.color}15, ${stat.color}05)`,
+                    borderColor: stat.color
                   }}
                 >
                   {stat.icon}
                 </motion.div>
 
-                {/* Content */}
                 <div className="position-relative">
-                  {/* Number */}
+                  {/* العدد */}
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={isInView ? { scale: 1, opacity: 1 } : {}}
-                    transition={{ 
-                      delay: index * 0.1 + 0.3, 
-                      type: "spring", 
-                      stiffness: 200 
-                    }}
-                    className="fw-bold mb-2"
-                    style={{ 
-                      color: stat.color,
-                      fontSize: "clamp(2rem, 4vw, 2.8rem)",
-                      lineHeight: 1.2
-                    }}
+                    transition={{ delay: index * 0.1 + 0.4 }}
+                    className="stat-number-wrapper"
                   >
-                    <Counter end={stat.value} />
-                    {stat.suffix}
+                    <span 
+                      className="stat-number"
+                      style={{ 
+                        background: stat.gradient,
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text"
+                      }}
+                    >
+                      <Counter end={stat.value} delay={index * 0.2} />
+                      {stat.suffix}
+                    </span>
                   </motion.div>
 
-                  {/* Label */}
-                  <p className="text-secondary mb-0 fw-medium" style={{ fontSize: "0.9rem" }}>
+                  {/* النص */}
+                  <p className="stat-label mb-0">
                     {stat.label}
                   </p>
+
+                  {/* مؤشر صغير أسفل البطاقة */}
+                  <motion.div 
+                    className="stat-progress"
+                    initial={{ width: "0%" }}
+                    animate={isInView ? { width: "100%" } : {}}
+                    transition={{ delay: 0.8 + index * 0.1, duration: 0.8 }}
+                    style={{ backgroundColor: stat.color }}
+                  />
                 </div>
 
-                {/* Simple hover effect - colored dot */}
+                {/* تأثير متوهج عند التحويم */}
                 <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileHover={{ scale: 1, opacity: 0.1 }}
-                  transition={{ duration: 0.2 }}
-                  className="position-absolute"
-                  style={{
-                    width: "120px",
-                    height: "120px",
-                    background: stat.color,
-                    borderRadius: "50%",
-                    bottom: "-40px",
-                    right: "-40px",
-                    zIndex: 0,
-                  }}
+                  className="stat-glow-effect"
+                  style={{ background: `radial-gradient(circle at center, ${stat.color}40, transparent 70%)` }}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileHover={{ opacity: 0.8, scale: 1.2 }}
+                  transition={{ duration: 0.4 }}
                 />
               </motion.div>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Simple divider */}
+        {/* قسم إضافي - شارة الجودة */}
         <motion.div
-          initial={{ opacity: 0, width: 0 }}
-          animate={isInView ? { opacity: 1, width: "100%" } : {}}
-          transition={{ delay: 1, duration: 1 }}
-          className="mt-5 mx-auto"
-          style={{
-            height: "2px",
-            background: "linear-gradient(90deg, transparent, #4AC5B5, transparent)",
-            maxWidth: "300px",
-            margin: "0 auto"
-          }}
-        />
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="text-center mt-5"
+        >
+          <div className="trust-badge">
+            <FiAward className="trust-icon" />
+            <span>Trusted by leading companies worldwide</span>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

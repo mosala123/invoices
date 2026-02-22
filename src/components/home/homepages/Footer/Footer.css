@@ -1,62 +1,454 @@
-.footer-section {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+/* Footer.css المحسن */
+
+.footer-enhanced {
   position: relative;
+  background: linear-gradient(135deg, #0b1120 0%, #111827 100%);
   overflow: hidden;
+  z-index: 1;
 }
 
-.footer-section::before {
-  content: '';
+/* خلفية متحركة */
+.footer-background {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+  animation: float 20s ease-in-out infinite;
+}
+
+.orb1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle at center, #6366f1, #8b5cf6);
+  top: -300px;
+  right: -200px;
+  animation-delay: -5s;
+}
+
+.orb2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle at center, #06b6d4, #10b981);
+  bottom: -250px;
+  left: -150px;
+  animation-delay: -10s;
+}
+
+.orb3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle at center, #f97316, #f59e0b);
+  top: 40%;
+  left: 40%;
+  opacity: 0.1;
+  animation-delay: -15s;
+}
+
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(40px, 40px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, -50px) scale(1.1); }
+}
+
+/* خط علوي */
+.footer-top-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  transform-origin: left;
+  z-index: 2;
+}
+
+/* العلامة التجارية */
+.logo-wrapper {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.brand-name {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.brand-description {
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+/* إحصائيات */
+.footer-stats {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px 0;
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-3px);
+}
+
+/* أيقونات التواصل الاجتماعي */
+.social-link {
+  width: 38px;
+  height: 38px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-link:hover {
+  transform: translateY(-5px) scale(1.1);
+  border-color: currentColor;
+  box-shadow: 0 5px 15px currentColor;
+}
+
+.social-link img {
+  transition: all 0.3s ease;
+}
+
+.social-link:hover img {
+  filter: brightness(1) !important;
+}
+
+/* عناوين الأعمدة */
+.footer-title {
+  color: white;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.title-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   height: 3px;
-  background: linear-gradient(90deg, #4AC5B5, #0d6efd, #4AC5B5);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* روابط سريعة */
+.footer-links li {
+  overflow: hidden;
 }
 
 .footer-links a {
   transition: all 0.3s ease;
+  padding: 5px 0;
   position: relative;
-  display: inline-block;
 }
 
 .footer-links a:hover {
-  color: #4AC5B5 !important;
+  transform: translateX(5px);
+  color: #6366f1 !important;
+}
+
+.footer-links a:hover img {
   opacity: 1 !important;
-  transform: translateX(-5px);
+  filter: brightness(0) saturate(100%) invert(43%) sepia(98%) saturate(1588%) hue-rotate(209deg) brightness(101%) contrast(91%);
 }
 
-.footer-section .form-control {
-  background-color: rgba(255, 255, 255, 0.1);
+.link-text {
+  position: relative;
+}
+
+.link-text::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #6366f1;
+  transition: width 0.3s ease;
+}
+
+.footer-links a:hover .link-text::after {
+  width: 100%;
+}
+
+/* النشرة البريدية */
+.newsletter-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  transition: all 0.3s ease;
 }
 
-.footer-section .form-control:focus {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: #4AC5B5;
-  box-shadow: 0 0 0 0.2rem rgba(74, 197, 181, 0.25);
+.newsletter-input {
+  background: transparent !important;
+  color: white !important;
+  padding: 12px 50px 12px 15px;
+  height: auto;
 }
 
-.footer-section .btn-primary {
-  background: linear-gradient(135deg, #4AC5B5, #0d6efd);
+.newsletter-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.newsletter-input:focus {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
+}
+
+.newsletter-button {
+  right: 5px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.footer-section .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(74, 197, 181, 0.3);
+.newsletter-button:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 5px 20px #6366f1;
 }
 
-/* تحسين Responsive */
-@media (max-width: 768px) {
-  .footer-section {
+/* طرق الدفع */
+.payment-icon {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.payment-icon:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-3px);
+}
+
+/* معلومات الاتصال */
+.contact-list a {
+  transition: all 0.3s ease;
+}
+
+.contact-list a:hover {
+  transform: translateX(5px);
+  color: #10b981 !important;
+}
+
+.contact-list a:hover img {
+  opacity: 1 !important;
+  filter: brightness(0) saturate(100%) invert(58%) sepia(34%) saturate(1289%) hue-rotate(115deg) brightness(96%) contrast(91%);
+}
+
+.contact-text {
+  transition: all 0.3s ease;
+  word-break: break-word;
+}
+
+/* شارة الثقة */
+.trust-badge {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trust-badge:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+}
+
+/* الروابط القانونية */
+.legal-links a {
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0 5px;
+}
+
+.legal-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: white;
+  transition: width 0.3s ease;
+}
+
+.legal-links a:hover {
+  opacity: 1 !important;
+}
+
+.legal-links a:hover::after {
+  width: 100%;
+}
+
+/* زر العودة للأعلى */
+.scroll-top-btn {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+  z-index: 10;
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-8px) scale(1.1);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+  .orb1, .orb2, .orb3 {
+    opacity: 0.1;
+  }
+
+  .brand-description {
+    max-width: 100%;
+  }
+
+  .footer-stats {
+    justify-content: center;
+  }
+
+  .footer-title {
+    margin-top: 1rem;
+  }
+
+  .scroll-top-btn {
+    right: 10px;
+    bottom: 10px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .footer-enhanced {
     text-align: center;
   }
-  
+
+  .title-underline {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .footer-links a {
+    justify-content: center;
+  }
+
   .footer-links a:hover {
-    transform: translateX(0) scale(1.05);
+    transform: translateY(-3px) scale(1.05);
+  }
+
+  .footer-links a:hover .link-text::after {
+    width: 0;
+  }
+
+  .contact-list a {
+    justify-content: center;
+  }
+
+  .payment-methods .d-flex {
+    justify-content: center;
+  }
+
+  .trust-badge {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  .legal-links {
+    margin-top: 1rem;
+  }
+
+  .scroll-top-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .footer-stats {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stat-item {
+    padding: 5px 0;
+  }
+
+  .newsletter-wrapper {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .payment-methods .d-flex {
+    flex-wrap: wrap;
+  }
+
+  .legal-links {
+    flex-direction: column;
+    gap: 10px !important;
+  }
+}
+
+/* Dark Mode (مدمج بالفعل) */
+@media (prefers-color-scheme: dark) {
+  .footer-enhanced {
+    background: linear-gradient(135deg, #030712, #0f172a);
+  }
+}
+
+/* Reduce Motion */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-orb,
+  .grid-overlay,
+  .footer-top-line,
+  .social-link,
+  .footer-links a,
+  .link-text::after,
+  .newsletter-button,
+  .payment-icon,
+  .contact-list a,
+  .trust-badge,
+  .legal-links a::after,
+  .scroll-top-btn,
+  .stat-item {
+    animation: none !important;
+    transition: none !important;
   }
 }

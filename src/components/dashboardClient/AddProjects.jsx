@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { supabase } from "../../supabaseClient";
+import { getAuthenticatedUser, supabase } from "../../supabaseClient";
 import Swal from "sweetalert2";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -61,20 +61,20 @@ const AddProjects = () => {
 
   /* fetch user */
   const loadUser = async () => {
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth?.user) { navigate("/loginclient"); return; }
-    const { data } = await supabase.from("clients").select("*").eq("id", auth.user.id).single();
+    const authUser = await getAuthenticatedUser();
+    if (!authUser) { navigate("/loginclient"); return; }
+    const { data } = await supabase.from("clients").select("*").eq("id", authUser.id).single();
     if (data) setClientUser(data);
-    else setClientUser({ id: auth.user.id, email: auth.user.email, name: auth.user.user_metadata?.name || auth.user.email });
+    else setClientUser({ id: authUser.id, email: authUser.email, name: authUser.user_metadata?.name || authUser.email });
   };
 
   /* fetch projects */
   const loadProjects = async () => {
     setFetching(true);
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth?.user) return;
+    const authUser = await getAuthenticatedUser();
+    if (!authUser) return;
     const { data, error } = await supabase
-      .from("projects").select("*").eq("client_id", auth.user.id)
+      .from("projects").select("*").eq("client_id", authUser.id)
       .order("created_at", { ascending: false });
     if (!error) setProjectsList(data || []);
     setFetching(false);
@@ -124,9 +124,10 @@ const AddProjects = () => {
         
         setEditingProject(null);
       } else {
-        const { data: auth } = await supabase.auth.getUser();
+        const authUser = await getAuthenticatedUser();
+        if (!authUser) throw new Error("Not authenticated");
         const { data, error } = await supabase.from("projects")
-          .insert({ ...formData, client_id: auth.user.id, client_name: clientUser?.name, client_email: clientUser?.email })
+          .insert({ ...formData, client_id: authUser.id, client_name: clientUser?.name, client_email: clientUser?.email })
           .select().single();
         if (error) throw error;
         setProjectsList(p => [data, ...p]);

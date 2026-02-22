@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Addtocart } from "../rtk/slices/cartslise";
-import { supabase } from "../../supabaseClient";
+import { getAuthenticatedUser, supabase } from "../../supabaseClient";
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -62,8 +62,8 @@ const CreateInvoices = () => {
     const init = async () => {
       setLoading(true);
       try {
-        const { data: auth } = await supabase.auth.getUser();
-        if (!auth?.user) {
+        const authUser = await getAuthenticatedUser();
+        if (!authUser) {
           toast.error("Please login first");
           return;
         }
@@ -72,13 +72,13 @@ const CreateInvoices = () => {
         const { data: fData } = await supabase
           .from("freelancers")
           .select("*")
-          .eq("id", auth.user.id)
+          .eq("id", authUser.id)
           .maybeSingle();
 
         setFreelancer(fData || {
-          id: auth.user.id,
-          email: auth.user.email,
-          name: auth.user.user_metadata?.name || auth.user.email
+          id: authUser.id,
+          email: authUser.email,
+          name: authUser.user_metadata?.name || authUser.email
         });
 
         // جلب المشاريع المتاحة مع تضمين client_id
@@ -290,7 +290,7 @@ const CreateInvoices = () => {
               </div>
             </div>
             {/* إحصائيات سريعة */}
-            <div className="col-lg-4">
+            <div className="col-lg-4 mt-4">
               <div style={{
                 background: "#f9fafb", borderRadius: "20px", padding: "20px",
                 display: "flex", gap: "15px", border: "1px solid #e5e7eb"

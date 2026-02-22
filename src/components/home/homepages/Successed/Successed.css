@@ -1,49 +1,501 @@
+/* Successed.css المحسن */
+
 .success-section {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+  overflow: hidden;
   min-height: 100vh;
   display: flex;
   align-items: center;
 }
 
-.success-content {
+/* خلفية متحركة */
+.success-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.1;
+  animation: float 20s ease-in-out infinite;
+}
+
+.orb1 {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle at center, #6366f1, #8b5cf6);
+  top: -350px;
+  left: -200px;
+}
+
+.orb2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle at center, #06b6d4, #10b981);
+  bottom: -300px;
+  right: -150px;
+  animation-delay: -7s;
+}
+
+.orb3 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle at center, #f97316, #f59e0b);
+  top: 40%;
+  left: 50%;
+  opacity: 0.08;
+  animation-delay: -14s;
+}
+
+.pattern-dots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(#6366f1 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.03;
+  animation: dotsMove 30s linear infinite;
+}
+
+@keyframes dotsMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(40px, 40px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(100px, -100px) scale(1.1); }
+}
+
+/* عرض الصورة المحسن */
+.image-showcase-enhanced {
+  position: relative;
+  padding: 20px;
+}
+
+.floating-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  filter: blur(30px);
+}
+
+.shape1 {
+  width: 250px;
+  height: 250px;
+  top: -50px;
+  right: -50px;
+}
+
+.shape2 {
+  width: 200px;
+  height: 200px;
+  bottom: -30px;
+  left: -30px;
+}
+
+.shape3 {
+  width: 150px;
+  height: 150px;
+  top: 40%;
+  left: 40%;
+}
+
+.main-image-enhanced {
+  position: relative;
+  border-radius: 30px;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
+  transform-origin: center;
+}
+
+.main-image-enhanced img {
+  transition: transform 0.5s ease;
+}
+
+.main-image-enhanced:hover img {
+  transform: scale(1.03);
+}
+
+.image-gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), transparent 70%);
+  pointer-events: none;
+}
+
+/* بطاقات عائمة */
+.floating-card {
+  position: absolute;
+  background: white;
+  padding: 12px 18px;
+  border-radius: 50px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  animation: cardFloat 3s ease infinite;
+}
+
+.card1 {
+  top: 20px;
+  right: 20px;
+  animation-delay: 0s;
+}
+
+.card2 {
+  bottom: 20px;
+  left: 20px;
+  animation-delay: 1s;
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.success-badge-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rotating-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+}
+
+/* شريط الإحصائيات */
+.stats-strip {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideUp 0.8s ease;
+}
+
+.stat-mini-icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.7;
+}
+
+.stat-item-mini {
+  transition: transform 0.3s ease;
+}
+
+.stat-item-mini:hover {
+  transform: translateY(-3px);
+}
+
+/* المحتوى المحسن */
+.success-content-enhanced {
   max-width: 600px;
+  margin-left: auto;
 }
 
-.benefits-list {
-  margin-top: 2rem;
+.success-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1.8rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.4);
+  position: relative;
+  overflow: hidden;
 }
 
-.benefits-list > div {
+.success-badge::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%);
+  animation: rotate 6s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.success-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: #1e293b;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientFlow 5s ease infinite;
+}
+
+@keyframes gradientFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.success-description {
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* بطاقات الفوائد المحسنة */
+.benefit-card-enhanced {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.benefit-card-enhanced > div {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.benefit-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.02;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.benefit-card-enhanced:hover .benefit-bg {
+  opacity: 0.04;
+}
+
+.benefit-icon-wrapper {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.benefit-card-enhanced:hover .benefit-icon-wrapper {
+  box-shadow: 0 10px 25px currentColor;
+}
+
+.benefit-stats {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.benefit-arrow {
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.benefit-card-enhanced:hover .benefit-arrow {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* شهادات سريعة */
+.quick-testimonials {
+  animation: fadeInUp 0.8s ease;
+}
+
+.testimonial-mini {
+  border: 1px solid rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 1px solid transparent;
 }
 
-.benefits-list > div:hover {
-  background: linear-gradient(90deg, rgba(74, 197, 181, 0.1), transparent) !important;
-  border-color: rgba(74, 197, 181, 0.2);
-  transform: translateX(10px);
+.testimonial-mini:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* تحسينات Responsive */
+.testimonial-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* زر CTA */
+.cta-wrapper button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.cta-wrapper button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.cta-wrapper button:hover::before {
+  left: 100%;
+}
+
+/* أنيميشنات */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-image-enhanced {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 991.98px) {
   .success-section {
     min-height: auto;
     padding: 60px 0;
   }
-  
-  .success-content {
+
+  .orb1, .orb2, .orb3 {
+    opacity: 0.05;
+  }
+
+  .success-content-enhanced {
     max-width: 100%;
     text-align: center;
+    margin: 0;
   }
-  
-  .benefits-list > div {
+
+  .benefit-card-enhanced > div {
+    justify-content: center;
+    text-align: left;
+  }
+
+  .benefit-arrow {
+    display: none;
+  }
+
+  .quick-testimonials .d-flex {
     justify-content: center;
   }
-  
-  .benefits-list > div:hover {
-    transform: translateY(-5px);
+
+  .cta-wrapper {
+    text-align: center;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .success-section {
+    padding: 50px 0;
+  }
+
+  .success-badge {
+    font-size: 0.85rem;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .success-title {
+    font-size: 2rem;
+  }
+
+  .success-description {
+    font-size: 1rem !important;
+  }
+
+  .benefit-icon-wrapper {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .benefit-icon-wrapper img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .benefit-stats {
+    font-size: 0.7rem;
+  }
+
+  .card1, .card2 {
+    display: none;
+  }
+
+  .stats-strip {
+    padding: 1rem !important;
+  }
+
+  .stat-mini-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .stat-item-mini h6 {
+    font-size: 0.9rem;
+  }
+
+  .stat-item-mini small {
+    font-size: 0.65rem;
   }
 }
 
@@ -51,31 +503,125 @@
   .success-section {
     padding: 40px 0;
   }
-  
-  .display-5 {
-    font-size: 2rem;
+
+  .success-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 1.2rem;
   }
-  
-  .benefits-list .d-flex {
-    flex-direction: column;
+
+  .success-title {
+    font-size: 1.8rem;
+  }
+
+  .success-description {
+    font-size: 0.9rem !important;
+  }
+
+  .benefit-card-enhanced > div {
+    padding: 0.8rem !important;
+    flex-wrap: wrap;
+    justify-content: center;
     text-align: center;
   }
-  
-  .btn-lg {
+
+  .benefit-icon-wrapper {
+    width: 45px !important;
+    height: 45px !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .benefit-stats {
+    display: block;
+    margin-top: 0.3rem;
+  }
+
+  .quick-testimonials .d-flex {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .testimonial-mini {
     width: 100%;
   }
+
+  .cta-wrapper button {
+    width: 100%;
+    padding: 0.8rem 2rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  .shape1, .shape2, .shape3 {
+    display: none;
+  }
 }
 
-/* أنيميشن للصورة */
-@keyframes floatImage {
-  0%, 100% {
-    transform: translateY(0);
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .success-section {
+    background: linear-gradient(135deg, #0b1120, #111827);
   }
-  50% {
-    transform: translateY(-15px);
+
+  .success-title {
+    color: #f1f5f9;
+  }
+
+  .success-description {
+    color: #94a3b8;
+  }
+
+  .stats-strip {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .stat-item-mini small {
+    color: #94a3b8 !important;
+  }
+
+  .benefit-card-enhanced p {
+    color: #e2e8f0 !important;
+  }
+
+  .floating-card {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+  }
+
+  .floating-card small {
+    color: #94a3b8 !important;
+  }
+
+  .testimonial-mini {
+    background: #1e293b !important;
+    border-color: #334155;
+  }
+
+  .testimonial-mini small {
+    color: #94a3b8 !important;
+  }
+
+  .success-badge {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
   }
 }
 
-.success-section img {
-  animation: floatImage 5s ease-in-out infinite;
+/* Reduce Motion */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-orb,
+  .pattern-dots,
+  .shape,
+  .floating-card,
+  .rotating-icon,
+  .success-badge::before,
+  .gradient-text,
+  .benefit-card-enhanced,
+  .benefit-icon-wrapper,
+  .benefit-arrow,
+  .testimonial-mini,
+  .cta-wrapper button::before,
+  .stat-item-mini {
+    animation: none !important;
+    transition: none !important;
+  }
 }

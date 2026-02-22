@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import Noprofile from "./Noprofile";
-import { supabase } from "../../supabaseClient";
+import { getAuthenticatedUser, supabase } from "../../supabaseClient";
 
 const Profileme = () => {
   const [resolvedRole, setResolvedRole] = useState("loading");
@@ -33,13 +33,11 @@ const Profileme = () => {
         return;
       }
 
-      const { data: authData, error: authError } = await supabase.auth.getUser();
-      if (authError || !authData?.user) {
+      const user = await getAuthenticatedUser();
+      if (!user) {
         setResolvedRole("none");
         return;
       }
-
-      const user = authData.user;
       const userId = user.id;
 
       // 3. ابحث في جدول clients

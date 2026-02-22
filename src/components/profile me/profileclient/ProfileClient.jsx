@@ -7,7 +7,7 @@ import {
   FaBuilding, FaCalendarAlt, FaExclamationTriangle
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../../../supabaseClient";
+import { getAuthenticatedUser, supabase } from "../../../supabaseClient";
 import Noprofile from "../Noprofile";
 
 const Field = ({ icon, label, value }) => (
@@ -91,10 +91,8 @@ const ProfileClient = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data: authData, error: authError } = await supabase.auth.getUser();
-        if (authError || !authData?.user) { setNotFound(true); setLoading(false); return; }
-
-        const authUser = authData.user;
+        const authUser = await getAuthenticatedUser();
+        if (!authUser) { setNotFound(true); setLoading(false); return; }
         const uuid = authUser.id; // ✅ دايمًا UUID من auth
         setAuthUid(uuid);
 

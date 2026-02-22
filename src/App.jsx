@@ -18,7 +18,6 @@ import Profileme from "./components/profile me/Profileme";
 import Homepages from "./components/home/Homepages";
 import AddProjects from "./components/dashboardClient/AddProjects";
 import CartInvoices from "./components/create invoices/CartInvoices";
-import { ChatProvider } from "./components/chat/ChatContext";
 
 function App() {
   useLocation();
@@ -38,11 +37,10 @@ function App() {
   const isFreelancer = normalizedRole === "freelancer";
 
   return (
-    <ChatProvider>
-      <div className="app-container">
-        <SlideNavBar />
-        <div className="main-content">
-          <Routes>
+    <div className="app-container">
+      <SlideNavBar />
+      <div className="main-content">
+        <Routes>
             <Route
               path="/addanewpro"
               element={
@@ -104,26 +102,25 @@ function App() {
               path="/report"
               element={
                 !isLoggedIn ? <Navigate to="/profile" replace /> :
-                (isClient || isFreelancer) ? <ReportsPage /> : <Navigate to="/profile" replace />
+                isFreelancer ? <ReportsPage /> : <Navigate to="/profile" replace />
               }
             />
-          </Routes>
-        </div>
-
-        <ToastContainer 
-          position="top-right" 
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
+        </Routes>
       </div>
-    </ChatProvider>
+
+      <ToastContainer 
+        position="top-right" 
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </div>
   );
 }
 

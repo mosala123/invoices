@@ -1,8 +1,8 @@
 // src/components/chat/ChatContext.jsx
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import { supabase } from '../../supabaseClient';
+import { getAuthenticatedUser, supabase } from '../../supabaseClient';
 import { toast } from 'react-toastify';
-import { sendEmailNotification as sendEmail } from '../services/emailService';
+import { sendEmailNotification } from '../services/emailService';
 
 const ChatContext = createContext();
 
@@ -51,7 +51,7 @@ export const ChatProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const { data: { user: u } } = await supabase.auth.getUser();
+        const u = await getAuthenticatedUser();
         if (!u) return;
         setUser(u);
 
@@ -92,14 +92,13 @@ export const ChatProvider = ({ children }) => {
     init();
   }, []);
 
-  // تحميل قائمة المحادثات (نسخة معدلة بدون nested objects)
+  // تحميل قائمة المحادثات
   useEffect(() => {
     if (!user || !userRole) return;
 
     const fetchConversations = async () => {
       setLoading(true);
       try {
-        // جلب المحادثات فقط
         const { data, error } = await supabase
           .from('conversations')
           .select('*')
@@ -108,7 +107,6 @@ export const ChatProvider = ({ children }) => {
 
         if (error) throw error;
 
-        // جلب البيانات الإضافية بشكل منفصل
         const conversationsWithDetails = await Promise.all((data || []).map(async (conv) => {
           const [projectRes, freelancerRes, clientRes] = await Promise.all([
             supabase.from('projects').select('id, project_name, client_email, client_name, client_phone').eq('id', conv.project_id).maybeSingle(),
@@ -220,9 +218,19 @@ export const ChatProvider = ({ children }) => {
     }
   }, [user, userRole]);
 
-  // إرسال رسالة
+  // إرسال رسالة (معدل لإرسال الإشعارات)
   const sendMessage = useCallback(async (conversationId, content, sendViaWhatsApp = false, sendViaEmail = false) => {
     if (!content.trim() || !user || !conversationId) return;
+
+    // الحصول على بيانات المحادثة الحالية
+    const conversation = conversations.find(c => c.id === conversationId);
+    if (!conversation) {
+      toast.error('Conversation not found');
+      return;
+    }
+
+    // الطرف الآخر (المرسل إليه)
+    const otherParty = userRole === 'freelancer' ? conversation.client : conversation.freelancer;
 
     const tempId = `_temp_${Date.now()}`;
     const optimistic = {
@@ -270,6 +278,25 @@ export const ChatProvider = ({ children }) => {
         .update({ last_message: content.trim(), last_message_time: new Date().toISOString() })
         .eq('id', conversationId);
 
+      // ✅ إرسال الإشعارات
+      if (sendViaEmail && otherParty?.email) {
+        await sendEmailNotification(
+          otherParty.email,                                   // to_email
+          otherParty.name || 'User',                           // to_name
+          user.user_metadata?.name || user.email,              // from_name
+          content.trim(),                                      // message
+          conversation.project?.project_name || 'Project Chat', // title
+          window.location.href                                 // reply_link (اختياري)
+        );
+      }
+
+      if (sendViaWhatsApp && otherParty?.phone) {
+        const message = `New message from ${user.user_metadata?.name || user.email}: ${content.trim()}`;
+        const phone = otherParty.phone.replace(/[^0-9]/g, ''); // تنظيف الرقم
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+      }
+
       return data;
     } catch (err) {
       console.error('sendMessage error:', err);
@@ -279,9 +306,9 @@ export const ChatProvider = ({ children }) => {
       }));
       toast.error('Failed to send message');
     }
-  }, [user, userRole]);
+  }, [user, userRole, conversations]);
 
-  // بدء محادثة جديدة (نسخة معدلة)
+  // بدء محادثة جديدة
   const startConversation = useCallback(async (projectId, clientId, freelancerId) => {
     if (!user) {
       toast.error('You must be logged in to start a conversation');

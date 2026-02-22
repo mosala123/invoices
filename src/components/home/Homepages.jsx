@@ -1,8 +1,7 @@
  import React from 'react'
 import Footer from './homepages/Footer/Footer'
-import Contact from './homepages/Contact/Contact'
 import Header from './homepages/Header/Header'
-import Navbar from './homepages/Navbar/Navbar'
+ 
 import Software from './homepages/Software/Software'
 import Stats from './homepages/Stats/Stats'
 import Successed from './homepages/Successed/Successed'
@@ -19,7 +18,7 @@ import Time from './homepages/Time/Time'
            <Time/>
            <Stats/>
            <Successed/>
-           <Contact/>
+            
            <Footer/>
      </div>
    )

@@ -11,7 +11,7 @@ import {
 } from 'react-icons/fa';
 import { jsPDF } from 'jspdf';
 import { toast } from 'react-toastify';
-import { supabase } from "../../supabaseClient";
+import { getAuthenticatedUser, supabase } from "../../supabaseClient";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ChatWidget from '../chat/ChatWidget';
 
@@ -181,11 +181,11 @@ const ShapeInvoices = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const { data: auth } = await supabase.auth.getUser();
-        if (!auth?.user) return;
+        const authUser = await getAuthenticatedUser();
+        if (!authUser) return;
         const { data } = await supabase
           .from("freelancers").select("name,email,phone")
-          .eq("id", auth.user.id).maybeSingle();
+          .eq("id", authUser.id).maybeSingle();
         setFreelancer(data || { name: "", email: "", phone: "" });
       } catch {
         const raw = localStorage.getItem("user");
@@ -271,8 +271,8 @@ const ShapeInvoices = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const { data: auth } = await supabase.auth.getUser();
-      if (!auth?.user) throw new Error("Not authenticated");
+      const authUser = await getAuthenticatedUser();
+      if (!authUser) throw new Error("Not authenticated");
 
       const { error } = await supabase.from("invoices").insert({
         invoice_id: invoice.invoiceId,
@@ -289,7 +289,7 @@ const ShapeInvoices = () => {
         invoice_date: invoice.invoiceDate || new Date().toISOString().split('T')[0],
         due_date: invoice.dueDate,
         tax_number: invoice.taxNumber,
-        user_id: auth.user.id,
+        user_id: authUser.id,
       });
 
       if (error) throw error;

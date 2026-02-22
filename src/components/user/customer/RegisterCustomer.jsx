@@ -123,7 +123,7 @@ const RegisterCustomer = () => {
               className="flex-column flex-lg-row">
 
               {/* IMAGE SIDE */}
-              <div className="d-none d-lg-flex" style={{ flex: 1, flexDirection: "column",
+              <div className="d-flex auth-visual-panel" style={{ flex: 1, flexDirection: "column",
                 alignItems: "center", justifyContent: "center",
                 background: "linear-gradient(135deg,#1a73e8 0%,#0d47a1 100%)",
                 padding: "44px 36px", textAlign: "center" }}>

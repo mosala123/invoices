@@ -7,7 +7,7 @@ import {
   FaCalendarAlt, FaTrash, FaExclamationTriangle
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../../supabaseClient";
+import { getAuthenticatedUser, supabase } from "../../../supabaseClient";
 import Noprofile from "../Noprofile";
 
 const Field = ({ icon, label, value }) => (
@@ -99,10 +99,8 @@ const ProfileFreelancer = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data: authData, error: authError } = await supabase.auth.getUser();
-        if (authError || !authData?.user) { setNotFound(true); setLoading(false); return; }
-
-        const authUser = authData.user;
+        const authUser = await getAuthenticatedUser();
+        if (!authUser) { setNotFound(true); setLoading(false); return; }
         const userId   = authUser.id;
 
         const { data, error } = await supabase
@@ -157,9 +155,9 @@ const ProfileFreelancer = () => {
   const handleUpdate = async () => {
     setSaving(true);
     try {
-      const { data: authData, error: authError } = await supabase.auth.getUser();
-      if (authError || !authData?.user) throw new Error("Not authenticated");
-      const userId = authData.user.id;
+      const authUser = await getAuthenticatedUser();
+      if (!authUser) throw new Error("Not authenticated");
+      const userId = authUser.id;
 
       const { error } = await supabase
         .from("freelancers")
@@ -232,9 +230,9 @@ const ProfileFreelancer = () => {
       onConfirm: async () => {
         setConfirmDialog(p=>({...p,isOpen:false}));
         try {
-          const { data: authData } = await supabase.auth.getUser();
-          if (authData?.user) {
-            await supabase.from("freelancers").delete().eq("id", authData.user.id);
+          const authUser = await getAuthenticatedUser();
+          if (authUser) {
+            await supabase.from("freelancers").delete().eq("id", authUser.id);
             localStorage.removeItem("token");
             localStorage.removeItem("user");
             toast.success("Account deleted");
