@@ -18,6 +18,7 @@ import Profileme from "./components/profile me/Profileme";
 import Homepages from "./components/home/Homepages";
 import AddProjects from "./components/dashboardClient/AddProjects";
 import CartInvoices from "./components/create invoices/CartInvoices";
+import ClientInvoices from "./components/dashboardClient/ClientInvoices"; // ← جديد
 
 function App() {
   useLocation();
@@ -41,75 +42,84 @@ function App() {
       <SlideNavBar />
       <div className="main-content">
         <Routes>
-            <Route
-              path="/addanewpro"
-              element={
-                !isLoggedIn ? <Navigate to="/loginclient" replace /> :
-                isClient ? <AddProjects /> : <Navigate to="/create-invoice" replace />
-              }
-            />
+          <Route
+            path="/addanewpro"
+            element={
+              !isLoggedIn ? <Navigate to="/loginclient" replace /> :
+              isClient ? <AddProjects /> : <Navigate to="/create-invoice" replace />
+            }
+          />
 
-            <Route path="/profile" element={<Profileme />} />
-            
-            <Route
-              path="/profilefreelancer"
-              element={
-                !isLoggedIn ? <Navigate to="/loginfreelancer" replace /> :
-                isFreelancer ? <ProfileFreelancer /> : <Navigate to="/profile" replace />
-              }
-            />
-            
-            <Route
-              path="/profileclient"
-              element={
-                !isLoggedIn ? <Navigate to="/loginclient" replace /> :
-                isClient ? <ProfileClient /> : <Navigate to="/profile" replace />
-              }
-            />
-            
-            <Route path="/registerclient" element={<RegisterCustomer />} />
-            <Route path="/loginclient" element={<LoginCustomer />} />
-            <Route path="/loginfreelancer" element={<LoginFreelancer />} />
-            <Route path="/registerfreelancer" element={<RegisterFreelancer />} />
+          <Route path="/profile" element={<Profileme />} />
 
-            <Route path="/" element={<Homepages />} />
-            <Route path="/about" element={<AboutPages />} />
-            
-            <Route
-              path="/create-invoice"
-              element={
-                !isLoggedIn ? <Navigate to="/loginfreelancer" replace /> :
-                isFreelancer ? <CreateInvoices /> : <Navigate to="/addanewpro" replace />
-              }
-            />
-            
-            <Route
-              path="/ProductsDetails/:invoiceId"
-              element={!isLoggedIn ? <Navigate to="/loginfreelancer" replace /> : <ShapeInvoices />}
-            />
-            
-            <Route
-              path="/cartinvoices"
-              element={!isLoggedIn ? <Navigate to="/loginfreelancer" replace /> : <CartInvoices />}
-            />
-            
-            <Route
-              path="/invoice/:invoiceId"
-              element={!isLoggedIn ? <Navigate to="/loginfreelancer" replace /> : <ShapeInvoices />}
-            />
-            
-            <Route
-              path="/report"
-              element={
-                !isLoggedIn ? <Navigate to="/profile" replace /> :
-                isFreelancer ? <ReportsPage /> : <Navigate to="/profile" replace />
-              }
-            />
+          <Route
+            path="/profilefreelancer"
+            element={
+              !isLoggedIn ? <Navigate to="/loginfreelancer" replace /> :
+              isFreelancer ? <ProfileFreelancer /> : <Navigate to="/profile" replace />
+            }
+          />
+
+          <Route
+            path="/profileclient"
+            element={
+              !isLoggedIn ? <Navigate to="/loginclient" replace /> :
+              isClient ? <ProfileClient /> : <Navigate to="/profile" replace />
+            }
+          />
+
+          <Route path="/registerclient" element={<RegisterCustomer />} />
+          <Route path="/loginclient" element={<LoginCustomer />} />
+          <Route path="/loginfreelancer" element={<LoginFreelancer />} />
+          <Route path="/registerfreelancer" element={<RegisterFreelancer />} />
+
+          <Route path="/" element={<Homepages />} />
+          <Route path="/about" element={<AboutPages />} />
+
+          <Route
+            path="/create-invoice"
+            element={
+              !isLoggedIn ? <Navigate to="/loginfreelancer" replace /> :
+              isFreelancer ? <CreateInvoices /> : <Navigate to="/addanewpro" replace />
+            }
+          />
+
+          <Route
+            path="/ProductsDetails/:invoiceId"
+            element={!isLoggedIn ? <Navigate to="/loginfreelancer" replace /> : <ShapeInvoices />}
+          />
+
+          <Route
+            path="/cartinvoices"
+            element={!isLoggedIn ? <Navigate to="/loginfreelancer" replace /> : <CartInvoices />}
+          />
+
+          <Route
+            path="/invoice/:invoiceId"
+            element={!isLoggedIn ? <Navigate to="/loginfreelancer" replace /> : <ShapeInvoices />}
+          />
+
+          {/* ← صفحة الـ client لمراجعة الفواتير */}
+          <Route
+            path="/my-invoices"
+            element={
+              !isLoggedIn ? <Navigate to="/loginclient" replace /> :
+              isClient ? <ClientInvoices /> : <Navigate to="/cartinvoices" replace />
+            }
+          />
+
+          <Route
+            path="/report"
+            element={
+              !isLoggedIn ? <Navigate to="/profile" replace /> :
+              isFreelancer ? <ReportsPage /> : <Navigate to="/profile" replace />
+            }
+          />
         </Routes>
       </div>
 
-      <ToastContainer 
-        position="top-right" 
+      <ToastContainer
+        position="top-right"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}

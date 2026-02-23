@@ -141,35 +141,42 @@ const Noprofile = () => {
                 all in one place. Create a profile that stands out and attracts opportunities.
               </motion.p>
 
-              <motion.div
-                variants={fadeInUp}
-                className="hero-stats d-flex gap-4 mb-4"
-              >
-                <div className="stat-item">
-                  <h3 className="fw-bold mb-0" style={{ color: colors.primary }}>10k+</h3>
-                  <small>Active Users</small>
-                </div>
-                <div className="stat-item">
-                  <h3 className="fw-bold mb-0" style={{ color: colors.accent1 }}>5k+</h3>
-                  <small>Professionals</small>
-                </div>
-                <div className="stat-item">
-                  <h3 className="fw-bold mb-0" style={{ color: colors.accent2 }}>98%</h3>
-                  <small>Satisfaction</small>
-                </div>
-              </motion.div>
+
+<div className="hero-stats d-flex flex-wrap justify-content-center align-items-center gap-4 mb-4">
+  <div className="stat-item p-3 rounded text-center bg-white shadow-sm">
+    <h3 className="fw-bold mb-0">
+      <span className="text-primary link-primary text-decoration-none">10k+</span>
+    </h3>
+    <small className="text-dark fw-bold ">Active Users</small>
+  </div>
+  
+  <div className="stat-item p-3 rounded text-center bg-white shadow-sm">
+    <h3 className="fw-bold mb-0">
+      <span className="text-success link-success text-decoration-none">5k+</span>
+    </h3>
+    <small className="text-dark fw-bold">Professionals</small>
+  </div>
+  
+  <div className="stat-item p-3 rounded text-center bg-white shadow-sm">
+    <h3 className="fw-bold mb-0">
+      <span className="text-info link-info text-decoration-none">98%</span>
+    </h3>
+    <small className="text-dark fw-bold ">Satisfaction</small>
+  </div>
+</div>
+
 
               <motion.div
                 variants={fadeInUp}
-                className="d-flex flex-column flex-md-row gap-3 align-items-center"
+                className="d-flex flex-column flex-md-row gap-3 align-items-center px-4"
               >
                 <motion.button
                   whileHover={{ scale: 1.05, y: -5 }}
                   whileTap={{ scale: 0.95 }}
-                  className="btn btn-primary btn-lg px-5 rounded-pill hero-btn"
-                  style={{ background: colors.gradient1, border: 'none' }}
+                  className="btn btn-primary btn-lg px-5 rounded-pill hero-btn nowrap d-flex"
+                  style={{ background: colors.gradient1, border: 'none', flexWrap: "nowrap" }}
                 >
-                  <span className="d-flex align-items-center gap-2">
+                  <span className="d-flex align-items-center gap-2"  >
                     Create Your Profile
                     <FiArrowRight />
                   </span>
@@ -188,7 +195,7 @@ const Noprofile = () => {
 
             <motion.div
               variants={fadeInRight}
-              className="col-lg-5 text-center mt-4 mt-lg-0"
+              className="col-lg-5 text-center mt-4 mt-lg-0 mt-4"
             >
               <motion.div
                 whileHover={{ scale: 1.02 }}

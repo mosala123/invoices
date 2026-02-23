@@ -11,9 +11,8 @@ import {
 } from 'react-icons/fa';
 import { jsPDF } from 'jspdf';
 import { toast } from 'react-toastify';
-import { getAuthenticatedUser, supabase } from "../../supabaseClient";
+import { supabase } from '../../supabaseClient';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ChatWidget from '../chat/ChatWidget';
 
 // نظام الألوان الفاتح والمتناسق
 const theme = {
@@ -172,28 +171,43 @@ const ShapeInvoices = () => {
   const { invoiceId } = useParams();
   const cartItems = useSelector(s => s.cart);
 
-  const [freelancer, setFreelancer] = useState(null);
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [activeTab, setActiveTab] = useState("details");
+  const [freelancer,    setFreelancer]    = useState(null);
+  const [saving,        setSaving]        = useState(false);
+  const [saved,         setSaved]         = useState(false);
+  const [timeLeft,      setTimeLeft]      = useState(0);
+  const [activeTab,     setActiveTab]     = useState("details");
+  const [invoiceStatus, setInvoiceStatus] = useState("pending");
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [userRole,      setUserRole]      = useState(null);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const authUser = await getAuthenticatedUser();
-        if (!authUser) return;
+        const { data: auth } = await supabase.auth.getUser();
+        if (!auth?.user) return;
+
         const { data } = await supabase
           .from("freelancers").select("name,email,phone")
-          .eq("id", authUser.id).maybeSingle();
+          .eq("id", auth.user.id).maybeSingle();
         setFreelancer(data || { name: "", email: "", phone: "" });
+
+        // حدد دور المستخدم
+        setUserRole(data ? "freelancer" : "client");
+
+        // جيب status الفاتورة لو متحفظة
+        const { data: inv } = await supabase
+          .from("invoices").select("status")
+          .eq("invoice_id", invoiceId).maybeSingle();
+        if (inv?.status) setInvoiceStatus(inv.status);
+
       } catch {
         const raw = localStorage.getItem("user");
         if (raw) setFreelancer(JSON.parse(raw));
+        setUserRole(localStorage.getItem("user_role") || "freelancer");
       }
     };
     load();
-  }, []);
+  }, [invoiceId]);
 
   if (!Array.isArray(cartItems)) {
     return (
@@ -268,11 +282,33 @@ const ShapeInvoices = () => {
   const tax = +(subtotal * 0.14).toFixed(2);
   const total = +(subtotal * 1.14).toFixed(2);
 
+  const handleApproval = async (newStatus) => {
+    setStatusLoading(true);
+    try {
+      const { error } = await supabase
+        .from("invoices")
+        .update({ status: newStatus })
+        .eq("invoice_id", invoiceId);
+
+      if (error) throw error;
+      setInvoiceStatus(newStatus);
+      toast.success(
+        newStatus === "approved"
+          ? "✅ Invoice Approved!"
+          : "❌ Invoice Rejected"
+      );
+    } catch (err) {
+      toast.error("Failed to update status: " + err.message);
+    } finally {
+      setStatusLoading(false);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
-      const authUser = await getAuthenticatedUser();
-      if (!authUser) throw new Error("Not authenticated");
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth?.user) throw new Error("Not authenticated");
 
       const { error } = await supabase.from("invoices").insert({
         invoice_id: invoice.invoiceId,
@@ -289,7 +325,9 @@ const ShapeInvoices = () => {
         invoice_date: invoice.invoiceDate || new Date().toISOString().split('T')[0],
         due_date: invoice.dueDate,
         tax_number: invoice.taxNumber,
-        user_id: authUser.id,
+        user_id: auth.user.id,
+        client_id: invoice.client_id || null,   // ← ربط الفاتورة بالـ client
+        status: "pending",
       });
 
       if (error) throw error;
@@ -577,9 +615,34 @@ const ShapeInvoices = () => {
                   }}>
                     #{invoice.invoiceId || "N/A"}
                   </h1>
-                  <p style={{ color: theme.textLight, fontSize: "1.1rem", margin: 0 }}>
-                    {invoice.serviceTitle}
-                  </p>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                    <p style={{ color: theme.textLight, fontSize: "1.1rem", margin: 0 }}>
+                      {invoice.serviceTitle}
+                    </p>
+                    {/* Status Badge */}
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: "6px",
+                      padding: "4px 14px", borderRadius: "50px", fontSize: "0.8rem", fontWeight: 700,
+                      background: invoiceStatus === "approved"
+                        ? "rgba(16,185,129,0.12)"
+                        : invoiceStatus === "rejected"
+                        ? "rgba(239,68,68,0.12)"
+                        : "rgba(245,158,11,0.12)",
+                      color: invoiceStatus === "approved"
+                        ? theme.secondary
+                        : invoiceStatus === "rejected"
+                        ? theme.danger
+                        : theme.accent,
+                      border: `1px solid ${
+                        invoiceStatus === "approved" ? theme.secondary
+                        : invoiceStatus === "rejected" ? theme.danger
+                        : theme.accent}40`,
+                    }}>
+                      {invoiceStatus === "approved" ? "✅ Approved"
+                        : invoiceStatus === "rejected" ? "❌ Rejected"
+                        : "🕐 Pending"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1100,7 +1163,57 @@ const ShapeInvoices = () => {
               Save invoice to database or download as PDF
             </p>
           </div>
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+
+            {/* Approval Buttons — للـ client بس */}
+            {userRole === "client" && saved && invoiceStatus === "pending" && (
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+                  onClick={() => handleApproval("approved")}
+                  disabled={statusLoading}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "8px",
+                    background: `linear-gradient(135deg, ${theme.secondary}, #059669)`,
+                    border: "none", color: "white", borderRadius: "12px",
+                    padding: "12px 28px", cursor: "pointer", fontWeight: 700,
+                    fontSize: "0.95rem", boxShadow: "0 6px 16px rgba(16,185,129,0.3)",
+                  }}>
+                  {statusLoading ? <span className="spinner-border spinner-border-sm"/> : "✅"} Approve
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+                  onClick={() => handleApproval("rejected")}
+                  disabled={statusLoading}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "8px",
+                    background: `linear-gradient(135deg, ${theme.danger}, #dc2626)`,
+                    border: "none", color: "white", borderRadius: "12px",
+                    padding: "12px 28px", cursor: "pointer", fontWeight: 700,
+                    fontSize: "0.95rem", boxShadow: "0 6px 16px rgba(239,68,68,0.3)",
+                  }}>
+                  {statusLoading ? <span className="spinner-border spinner-border-sm"/> : "❌"} Reject
+                </motion.button>
+              </>
+            )}
+
+            {/* لو الـ status اتغير */}
+            {invoiceStatus !== "pending" && (
+              <div style={{
+                display: "flex", alignItems: "center", gap: "8px",
+                padding: "10px 20px", borderRadius: "12px",
+                background: invoiceStatus === "approved"
+                  ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                border: `1px solid ${invoiceStatus === "approved" ? theme.secondary : theme.danger}40`,
+              }}>
+                <span style={{
+                  color: invoiceStatus === "approved" ? theme.secondary : theme.danger,
+                  fontWeight: 700, fontSize: "0.95rem",
+                }}>
+                  {invoiceStatus === "approved" ? "✅ Client Approved" : "❌ Client Rejected"}
+                </span>
+              </div>
+            )}
             <button
               onClick={generatePDF}
               style={{
@@ -1166,14 +1279,6 @@ const ShapeInvoices = () => {
           </div>
         </div>
       </div>
-
-      {/* ══ CHAT WIDGET ══ */}
-      <ChatWidget
-        projectId={invoice.project_id || invoice.invoiceId}
-        projectName={invoice.serviceTitle}
-        clientName={invoice.customerName}
-        position="bottom-right"
-      />
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');

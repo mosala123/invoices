@@ -329,6 +329,7 @@ export const ChatProvider = ({ children }) => {
         .from('conversations')
         .select('id')
         .eq('project_id', projectId)
+        .eq('freelancer_id', freelancerId)   // ✅ أضف السطر ده
         .maybeSingle();
 
       if (searchError) throw searchError;

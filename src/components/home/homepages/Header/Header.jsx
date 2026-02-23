@@ -151,7 +151,7 @@ const Header = () => {
                   {[
                     { value: "10k+", label: "Active Users", icon: " " },
                     { value: "50k+", label: "Invoices Created", icon: "" },
-                    { value: "95%", label: "Customer Satisfaction", icon: "" },
+                    { value: "95%", label: "Cust Satisfaction", icon: "" },
                   ].map((stat) => (
                     <div key={stat.label} className="col-4">
                       <div className="stat-item p-3">

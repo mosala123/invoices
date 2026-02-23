@@ -4,7 +4,7 @@ import { CgProfile } from "react-icons/cg";
 import { TbReportSearch } from "react-icons/tb";
 import { RiMenu2Fill } from "react-icons/ri";
 import { MdOutlineReceipt } from "react-icons/md";
-import { FaFolderPlus } from "react-icons/fa";
+import { FaFolderPlus, FaFileInvoiceDollar } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import imageslide from "../../images/logo.svg";
 import "./SlideNavBar.css";
@@ -17,7 +17,6 @@ const SlideNavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  /* -- auto-collapse on small screens -- */
   useEffect(() => {
     const handleResize = () => setIsVisible(window.innerWidth > 992);
     handleResize();
@@ -37,9 +36,9 @@ const SlideNavBar = () => {
     normalizedRole = "";
   }
 
-  const isClient = normalizedRole === "client" || normalizedRole === "customer";
+  const isClient     = normalizedRole === "client" || normalizedRole === "customer";
   const isFreelancer = normalizedRole === "freelancer";
-  const isLoggedIn = !!token || !!rawUser || !!normalizedRole;
+  const isLoggedIn   = !!token || !!rawUser || !!normalizedRole;
 
   const profilePath = isClient
     ? "/profileclient"
@@ -58,118 +57,109 @@ const SlideNavBar = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#6c757d",
     });
-
     if (!result.isConfirmed) return;
-
     await supabase.auth.signOut();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/");
   };
 
-  /* -- helper: is current path? -- */
   const isActive = (path) => location.pathname === path;
   const isProfileActive = () =>
     isActive("/profile") || isActive("/profileclient") || isActive("/profilefreelancer");
 
   return (
     <div className={`slide-navbar ${isVisible ? "show" : ""}`}>
-      {/* --- TOP: hamburger + logo --- */}
+      {/* TOP */}
       <div className="slide-top">
-        {/* hamburger — only visible <=992 */}
         <div className="hamburger-wrapper">
-          <RiMenu2Fill style={{fontSize:"42px"}}
-            className="slidemenu text-light  text-light fw-bold" 
-            onClick={toggleNavbar} 
+          <RiMenu2Fill style={{ fontSize: "42px" }}
+            className="slidemenu text-light fw-bold"
+            onClick={toggleNavbar}
           />
         </div>
-
         <div className="slide-logo-wrap">
           <img src={imageslide} alt="Logo" />
         </div>
       </div>
 
-      {/* --- NAVIGATION --- */}
+      {/* NAVIGATION */}
       <div className="slide-bottom">
         <ul>
-          {/* -- MAIN section -- */}
+          {/* MAIN */}
           <li className="nav-section">
             <span className="nav-section-title">Main</span>
           </li>
-
           <li className="nav-item">
-            <Link
-              to="/"
-              data-tip="Home"
-              className={`nav-link d-flex align-items-center ${isActive("/") ? "active" : ""}`}
-            >
+            <Link to="/" data-tip="Home"
+              className={`nav-link d-flex align-items-center ${isActive("/") ? "active" : ""}`}>
               <AiOutlineHome className="slideicons" />
               <span className="nav-label">Home</span>
             </Link>
           </li>
-
           <li className="nav-item">
-            <Link
-              to="/about"
-              data-tip="About Us"
-              className={`nav-link d-flex align-items-center ${isActive("/about") ? "active" : ""}`}
-            >
+            <Link to="/about" data-tip="About Us"
+              className={`nav-link d-flex align-items-center ${isActive("/about") ? "active" : ""}`}>
               <AiOutlineInfoCircle className="slideicons" />
               <span className="nav-label">About Us</span>
             </Link>
           </li>
 
-          {/* -- INVOICES section (only when logged in) -- */}
+          {/* INVOICES — لما يكون logged in */}
           {isLoggedIn && (isClient || isFreelancer) && (
             <>
-              <li className="nav-divider-li">
-                <div className="nav-divider" />
-              </li>
+              <li className="nav-divider-li"><div className="nav-divider" /></li>
               <li className="nav-section">
                 <span className="nav-section-title">Invoices</span>
               </li>
 
-              <li className="nav-item">
-                {isClient ? (
-                  <Link
-                    to="/addanewpro"
-                    data-tip="Add Projects"
-                    className={`nav-link d-flex align-items-center ${isActive("/addanewpro") ? "active" : ""}`}
-                  >
-                    <FaFolderPlus className="slideicons" />
-                    <span className="nav-label">Add Projects</span>
-                  </Link>
-                ) : (
-                  <Link
-                    to="/create-invoice"
-                    data-tip="Create Invoice"
-                    className={`nav-link d-flex align-items-center ${isActive("/create-invoice") ? "active" : ""}`}
-                  >
+              {/* Freelancer → Create Invoice */}
+              {isFreelancer && (
+                <li className="nav-item">
+                  <Link to="/create-invoice" data-tip="Create Invoice"
+                    className={`nav-link d-flex align-items-center ${isActive("/create-invoice") ? "active" : ""}`}>
                     <MdOutlineReceipt className="slideicons" />
                     <span className="nav-label">Create Invoice</span>
                   </Link>
-                )}
-              </li>
+                </li>
+              )}
+
+              {/* Client → Add Projects */}
+              {isClient && (
+                <li className="nav-item">
+                  <Link to="/addanewpro" data-tip="Add Projects"
+                    className={`nav-link d-flex align-items-center ${isActive("/addanewpro") ? "active" : ""}`}>
+                    <FaFolderPlus className="slideicons" />
+                    <span className="nav-label">Add Projects</span>
+                  </Link>
+                </li>
+              )}
+
+              {/* Client → My Invoices ← الجديد */}
+              {isClient && (
+                <li className="nav-item">
+                  <Link to="/my-invoices" data-tip="My Invoices"
+                    className={`nav-link d-flex align-items-center ${isActive("/my-invoices") ? "active" : ""}`}>
+                    <FaFileInvoiceDollar className="slideicons" />
+                    <span className="nav-label">My Invoices</span>
+                  </Link>
+                </li>
+              )}
             </>
           )}
 
-          {/* -- ACCOUNT section (only when logged in) -- */}
+          {/* ACCOUNT */}
           {isLoggedIn && (isClient || isFreelancer) && (
             <>
-              <li className="nav-divider-li">
-                <div className="nav-divider" />
-              </li>
+              <li className="nav-divider-li"><div className="nav-divider" /></li>
               <li className="nav-section">
                 <span className="nav-section-title">Account</span>
               </li>
 
               {isFreelancer && (
                 <li className="nav-item">
-                  <Link
-                    to="/report"
-                    data-tip="Reports"
-                    className={`nav-link d-flex align-items-center ${isActive("/report") ? "active" : ""}`}
-                  >
+                  <Link to="/report" data-tip="Reports"
+                    className={`nav-link d-flex align-items-center ${isActive("/report") ? "active" : ""}`}>
                     <TbReportSearch className="slideicons" />
                     <span className="nav-label">Reports</span>
                   </Link>
@@ -177,26 +167,18 @@ const SlideNavBar = () => {
               )}
 
               <li className="nav-item">
-                <Link
-                  to={profilePath}
-                  data-tip="Profile"
-                  className={`nav-link d-flex align-items-center ${isProfileActive() ? "active" : ""}`}
-                >
+                <Link to={profilePath} data-tip="Profile"
+                  className={`nav-link d-flex align-items-center ${isProfileActive() ? "active" : ""}`}>
                   <CgProfile className="slideicons" />
                   <span className="nav-label">Profile</span>
                 </Link>
               </li>
 
-              <li className="nav-divider-li">
-                <div className="nav-divider" />
-              </li>
+              <li className="nav-divider-li"><div className="nav-divider" /></li>
 
               <li className="nav-item">
-                <button
-                  onClick={handleLogout}
-                  data-tip="Logout"
-                  className="nav-link nav-btn logout d-flex align-items-center"
-                >
+                <button onClick={handleLogout} data-tip="Logout"
+                  className="nav-link nav-btn logout d-flex align-items-center">
                   <FaArrowRightFromBracket className="slideicons" />
                   <span className="nav-label">Logout</span>
                 </button>
@@ -204,18 +186,13 @@ const SlideNavBar = () => {
             </>
           )}
 
-          {/* profile visible when NOT logged in */}
+          {/* غير مسجل */}
           {!isLoggedIn && (
             <>
-              <li className="nav-divider-li">
-                <div className="nav-divider" />
-              </li>
+              <li className="nav-divider-li"><div className="nav-divider" /></li>
               <li className="nav-item">
-                <Link
-                  to="/profile"
-                  data-tip="Profile"
-                  className={`nav-link d-flex align-items-center ${isActive("/profile") ? "active" : ""}`}
-                >
+                <Link to="/profile" data-tip="Profile"
+                  className={`nav-link d-flex align-items-center ${isActive("/profile") ? "active" : ""}`}>
                   <CgProfile className="slideicons" />
                   <span className="nav-label">Profile</span>
                 </Link>
