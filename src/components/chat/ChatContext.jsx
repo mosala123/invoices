@@ -218,7 +218,7 @@ export const ChatProvider = ({ children }) => {
     }
   }, [user, userRole]);
 
-  // إرسال رسالة (معدل لإرسال الإشعارات)
+  // إرسال رسالة (معدل لإرسال الإشعارات مع إضافة الوقت)
   const sendMessage = useCallback(async (conversationId, content, sendViaWhatsApp = false, sendViaEmail = false) => {
     if (!content.trim() || !user || !conversationId) return;
 
@@ -278,15 +278,25 @@ export const ChatProvider = ({ children }) => {
         .update({ last_message: content.trim(), last_message_time: new Date().toISOString() })
         .eq('id', conversationId);
 
-      // ✅ إرسال الإشعارات
+      // ✅ إرسال الإشعارات مع إضافة الوقت
       if (sendViaEmail && otherParty?.email) {
+        // إنشاء الوقت الحالي بشكل منسق
+        const currentTime = new Date().toLocaleString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        });
+        
         await sendEmailNotification(
           otherParty.email,                                   // to_email
           otherParty.name || 'User',                           // to_name
           user.user_metadata?.name || user.email,              // from_name
           content.trim(),                                      // message
           conversation.project?.project_name || 'Project Chat', // title
-          window.location.href                                 // reply_link (اختياري)
+          window.location.href,                                 // reply_link
+          currentTime                                          // time (المتغير الجديد)
         );
       }
 
@@ -329,7 +339,7 @@ export const ChatProvider = ({ children }) => {
         .from('conversations')
         .select('id')
         .eq('project_id', projectId)
-        .eq('freelancer_id', freelancerId)   // ✅ أضف السطر ده
+        .eq('freelancer_id', freelancerId)
         .maybeSingle();
 
       if (searchError) throw searchError;
