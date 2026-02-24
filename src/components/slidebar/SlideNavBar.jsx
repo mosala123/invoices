@@ -4,7 +4,7 @@ import { CgProfile } from "react-icons/cg";
 import { TbReportSearch } from "react-icons/tb";
 import { RiMenu2Fill } from "react-icons/ri";
 import { MdOutlineReceipt } from "react-icons/md";
-import { FaFolderPlus, FaFileInvoiceDollar } from "react-icons/fa";
+import { FaFolderPlus, FaFileInvoiceDollar, FaTachometerAlt } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import imageslide from "../../images/logo.svg";
 import "./SlideNavBar.css";
@@ -112,6 +112,17 @@ const SlideNavBar = () => {
               <li className="nav-section">
                 <span className="nav-section-title">Invoices</span>
               </li>
+
+              {/* Freelancer → Dashboard */}
+              {isFreelancer && (
+                <li className="nav-item">
+                  <Link to="/dashboard" data-tip="Dashboard"
+                    className={`nav-link d-flex align-items-center ${isActive("/dashboard") ? "active" : ""}`}>
+                    <FaTachometerAlt className="slideicons" />
+                    <span className="nav-label">Dashboard</span>
+                  </Link>
+                </li>
+              )}
 
               {/* Freelancer → Create Invoice */}
               {isFreelancer && (

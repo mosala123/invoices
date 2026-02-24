@@ -1,5 +1,5 @@
 // src/components/create invoices/CartInvoices.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -12,6 +12,8 @@ import Swal from "sweetalert2";
 import { Deletcart } from "../rtk/slices/cartslise";
 import { Link, useNavigate } from "react-router-dom";
 import ChatWidget from "../chat/ChatWidget";
+import { supabase } from "../../supabaseClient";
+import { toast } from "react-toastify";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const theme = {
@@ -43,9 +45,53 @@ const CartInvoices = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const [filterStatus, setFilterStatus] = useState("All");
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [activeChatItem, setActiveChatItem] = useState(null);
+  const [filterStatus,    setFilterStatus]    = useState("All");
+  const [selectedItems,   setSelectedItems]   = useState([]);
+  const [activeChatItem,  setActiveChatItem]  = useState(null);
+  const [invoiceStatuses, setInvoiceStatuses] = useState({}); // invoice_id → status
+
+  /* ── Real-time: جيب status كل فاتورة من Supabase ── */
+  useEffect(() => {
+    if (!cart.length) return;
+
+    const fetchStatuses = async () => {
+      try {
+        const ids = cart.map(i => i.invoiceId || i.id).filter(Boolean);
+        const { data } = await supabase
+          .from("invoices")
+          .select("invoice_id, status")
+          .in("invoice_id", ids);
+
+        if (data) {
+          const map = {};
+          data.forEach(inv => { map[inv.invoice_id] = inv.status; });
+          setInvoiceStatuses(map);
+        }
+      } catch {}
+    };
+
+    fetchStatuses();
+
+    // Real-time: لما الـ client يغير الـ status
+    const channel = supabase
+      .channel("cart_statuses")
+      .on("postgres_changes", {
+        event: "UPDATE", schema: "public", table: "invoices",
+      }, (payload) => {
+        setInvoiceStatuses(prev => ({
+          ...prev,
+          [payload.new.invoice_id]: payload.new.status,
+        }));
+        if (payload.new.status === "approved") {
+          toast.success(`✅ "${payload.new.service_title}" was Approved!`);
+        } else if (payload.new.status === "rejected") {
+          toast.error(`❌ "${payload.new.service_title}" was Rejected`);
+        }
+      })
+      .subscribe();
+
+    return () => channel.unsubscribe();
+  }, [cart.length]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -238,7 +284,9 @@ const CartInvoices = () => {
                 <tbody>
                   <AnimatePresence>
                     {filteredCart.map((item, idx) => {
-                      const st = getStatusStyle(item.status);
+                      // الـ status من Supabase real-time أو من الـ cart
+                      const liveStatus = invoiceStatuses[item.invoiceId || item.id] || item.status;
+                      const st = getStatusStyle(liveStatus);
                       const isSel = selectedItems.includes(item.id);
                       return (
                         <motion.tr key={item.id || idx}

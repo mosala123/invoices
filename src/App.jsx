@@ -18,7 +18,8 @@ import Profileme from "./components/profile me/Profileme";
 import Homepages from "./components/home/Homepages";
 import AddProjects from "./components/dashboardClient/AddProjects";
 import CartInvoices from "./components/create invoices/CartInvoices";
-import ClientInvoices from "./components/dashboardClient/ClientInvoices"; // ← جديد
+import ClientInvoices from "./components/dashboardClient/ClientInvoices";
+import FreelancerDashboard from "./components/dashboard/FreelancerDashboard";
 
 function App() {
   useLocation();
@@ -97,6 +98,15 @@ function App() {
           <Route
             path="/invoice/:invoiceId"
             element={!isLoggedIn ? <Navigate to="/loginfreelancer" replace /> : <ShapeInvoices />}
+          />
+
+          {/* ← Dashboard للـ freelancer */}
+          <Route
+            path="/dashboard"
+            element={
+              !isLoggedIn ? <Navigate to="/loginfreelancer" replace /> :
+              isFreelancer ? <FreelancerDashboard /> : <Navigate to="/my-invoices" replace />
+            }
           />
 
           {/* ← صفحة الـ client لمراجعة الفواتير */}

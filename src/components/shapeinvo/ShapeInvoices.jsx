@@ -12,6 +12,7 @@ import {
 import { jsPDF } from 'jspdf';
 import { toast } from 'react-toastify';
 import { supabase } from '../../supabaseClient';
+import { sendEmailNotification } from '../services/emailService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // نظام الألوان الفاتح والمتناسق
@@ -331,6 +332,22 @@ const ShapeInvoices = () => {
       });
 
       if (error) throw error;
+
+      // ── إرسال إيميل للـ Client بعد الحفظ ──
+      if (invoice.customerEmail) {
+        try {
+          await sendEmailNotification(
+            invoice.customerEmail,
+            invoice.customerName || "Client",
+            freelancer?.name || "Freelancer",
+            `You have a new invoice for "${invoice.serviceTitle}" worth ${total.toLocaleString()} EGP. Please review and approve it.`,
+            invoice.serviceTitle,
+            `${window.location.origin}/my-invoices`
+          );
+          toast.info("📧 Email sent to client!");
+        } catch {}
+      }
+
       toast.success("Invoice saved successfully! ✅");
       setSaved(true);
     } catch (err) {
