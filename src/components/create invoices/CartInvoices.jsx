@@ -57,6 +57,8 @@ const CartInvoices = () => {
     const fetchStatuses = async () => {
       try {
         const ids = cart.map(i => i.invoiceId || i.id).filter(Boolean);
+        if (ids.length === 0) return;
+        
         const { data } = await supabase
           .from("invoices")
           .select("invoice_id, status")
@@ -67,7 +69,9 @@ const CartInvoices = () => {
           data.forEach(inv => { map[inv.invoice_id] = inv.status; });
           setInvoiceStatuses(map);
         }
-      } catch {}
+      } catch (err) {
+        console.error('Error fetching invoice statuses:', err);
+      }
     };
 
     fetchStatuses();
@@ -285,7 +289,7 @@ const CartInvoices = () => {
                   <AnimatePresence>
                     {filteredCart.map((item, idx) => {
                       // الـ status من Supabase real-time أو من الـ cart
-                      const liveStatus = invoiceStatuses[item.invoiceId || item.id] || item.status;
+                      const liveStatus = invoiceStatuses[item.invoiceId] || item.status || 'Open';
                       const st = getStatusStyle(liveStatus);
                       const isSel = selectedItems.includes(item.id);
                       return (

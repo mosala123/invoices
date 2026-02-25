@@ -52,38 +52,67 @@ export const ChatProvider = ({ children }) => {
     const init = async () => {
       try {
         const u = await getAuthenticatedUser();
-        if (!u) return;
+        if (!u) {
+          console.log('No authenticated user found');
+          return;
+        }
         setUser(u);
+        console.log('Authenticated user:', u);
 
-        const { data: fl } = await supabase
+        // جرب تجيب المستخدم من جدول freelancers
+        const { data: fl, error: flError } = await supabase
           .from('freelancers')
           .select('id, email, name, phone, last_seen')
           .eq('id', u.id)
           .maybeSingle();
 
-        const role = fl ? 'freelancer' : 'client';
+        if (flError) console.error('Error fetching freelancer:', flError);
+
+        let role = 'client'; // افتراضي
+        let userData = null;
+
+        if (fl) {
+          // هو freelancer
+          role = 'freelancer';
+          userData = fl;
+          console.log('User is freelancer:', fl);
+        } else {
+          // جرب تجيبه من جدول clients
+          const { data: cl, error: clError } = await supabase
+            .from('clients')
+            .select('id, email, name, phone, last_seen')
+            .eq('id', u.id)
+            .maybeSingle();
+          
+          if (clError) console.error('Error fetching client:', clError);
+          
+          if (cl) {
+            role = 'client';
+            userData = cl;
+            console.log('User is client:', cl);
+          } else {
+            console.warn('User not found in freelancers or clients tables');
+          }
+        }
+
         setUserRole(role);
 
+        // حفظ في localStorage
         localStorage.setItem('user_id', u.id);
         localStorage.setItem('user_role', role);
         localStorage.setItem('user_email', u.email);
         localStorage.setItem('user_name', u.user_metadata?.name || u.email?.split('@')[0] || '');
 
-        if (role === 'freelancer') {
+        if (role === 'freelancer' && userData) {
           localStorage.setItem('freelancer_id', u.id);
-          localStorage.setItem('freelancer_email', fl?.email || u.email);
-          localStorage.setItem('freelancer_name', fl?.name || '');
-          localStorage.setItem('freelancer_phone', fl?.phone || '');
-        } else {
+          localStorage.setItem('freelancer_email', userData.email || u.email);
+          localStorage.setItem('freelancer_name', userData.name || '');
+          localStorage.setItem('freelancer_phone', userData.phone || '');
+        } else if (role === 'client' && userData) {
           localStorage.setItem('client_id', u.id);
-          const { data: cl } = await supabase
-            .from('clients')
-            .select('email, name, phone, last_seen')
-            .eq('id', u.id)
-            .maybeSingle();
-          localStorage.setItem('client_email', cl?.email || u.email);
-          localStorage.setItem('client_name', cl?.name || '');
-          localStorage.setItem('client_phone', cl?.phone || '');
+          localStorage.setItem('client_email', userData.email || u.email);
+          localStorage.setItem('client_name', userData.name || '');
+          localStorage.setItem('client_phone', userData.phone || '');
         }
       } catch (err) {
         console.error('ChatProvider init error:', err);
@@ -220,7 +249,10 @@ export const ChatProvider = ({ children }) => {
 
   // إرسال رسالة (معدل لإرسال الإشعارات مع إضافة الوقت)
   const sendMessage = useCallback(async (conversationId, content, sendViaWhatsApp = false, sendViaEmail = false) => {
-    if (!content.trim() || !user || !conversationId) return;
+    if (!content.trim() || !user || !conversationId) {
+      console.log('Cannot send message:', { content, user, conversationId });
+      return;
+    }
 
     // الحصول على بيانات المحادثة الحالية
     const conversation = conversations.find(c => c.id === conversationId);
@@ -231,6 +263,7 @@ export const ChatProvider = ({ children }) => {
 
     // الطرف الآخر (المرسل إليه)
     const otherParty = userRole === 'freelancer' ? conversation.client : conversation.freelancer;
+    console.log('Other party:', otherParty);
 
     const tempId = `_temp_${Date.now()}`;
     const optimistic = {
@@ -289,21 +322,35 @@ export const ChatProvider = ({ children }) => {
           year: 'numeric'
         });
         
+        console.log('📧 Preparing to send email to:', otherParty.email);
+        
         await sendEmailNotification(
-          otherParty.email,                                   // to_email
-          otherParty.name || 'User',                           // to_name
-          user.user_metadata?.name || user.email,              // from_name
-          content.trim(),                                      // message
+          otherParty.email,                                    // to_email
+          otherParty.name || 'User',                            // to_name
+          user.user_metadata?.name || user.email,               // from_name
+          content.trim(),                                       // message
           conversation.project?.project_name || 'Project Chat', // title
           window.location.href,                                 // reply_link
-          currentTime                                          // time (المتغير الجديد)
+          user.email || '',                                     // from_email (لـ reply)
+          currentTime                                           // time
         );
       }
 
       if (sendViaWhatsApp && otherParty?.phone) {
         const message = `New message from ${user.user_metadata?.name || user.email}: ${content.trim()}`;
-        const phone = otherParty.phone.replace(/[^0-9]/g, ''); // تنظيف الرقم
+        // تنظيف الرقم (شيل أي حرف مش رقم)
+        let phone = otherParty.phone.replace(/[^0-9]/g, '');
+        
+        // لو الرقم بيبدأ بصفر، حوله للصيغة الدولية (مثال لمصر)
+        if (phone.startsWith('0')) {
+          phone = '20' + phone.substring(1);
+        } else if (phone.length === 11 && phone.startsWith('1')) {
+          // لو رقم مصري بدون كود البلد
+          phone = '20' + phone;
+        }
+        
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        console.log('📱 WhatsApp URL:', url);
         window.open(url, '_blank');
       }
 

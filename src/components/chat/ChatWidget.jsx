@@ -80,13 +80,19 @@ const ChatWidget = ({
     : null;
   const isOnline = otherParty && otherParty.last_seen && (new Date() - new Date(otherParty.last_seen)) < 5 * 60 * 1000;
 
-
-
   const currentMessages = convId ? (messagesMap[convId] || []) : [];
 
   // تهيئة المحادثة عند فتح الشات (مع التأكد من projectId الصحيح)
   useEffect(() => {
     if (!open || !projectId || convId || initializing || initDoneRef.current) return;
+    
+    // تحقق من وجود user
+    if (!user) {
+      console.log('User not logged in yet');
+      toast.info('Please login to start chatting');
+      return;
+    }
+    
     initDoneRef.current = true;
 
     const init = async () => {
@@ -94,6 +100,14 @@ const ChatWidget = ({
       try {
         const effClientId = clientId || localStorage.getItem('client_id');
         const effFreelancerId = freelancerId || localStorage.getItem('freelancer_id');
+
+        console.log('Initializing chat with:', { 
+          projectId, 
+          effClientId, 
+          effFreelancerId,
+          user: user?.id,
+          userRole 
+        });
 
         if (!effClientId || !effFreelancerId) {
           toast.error("Chat: missing client or freelancer ID");
@@ -118,7 +132,7 @@ const ChatWidget = ({
       }
     };
     init();
-  }, [open, projectId, clientId, freelancerId, startConversation, loadMessages, setActiveConversation]);
+  }, [open, projectId, clientId, freelancerId, startConversation, loadMessages, setActiveConversation, user]);
 
   // تحديد الرسائل كمقروءة عند فتح الشات
   useEffect(() => {
