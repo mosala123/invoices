@@ -1,58 +1,41 @@
 // src/components/services/emailService.js
 import emailjs from '@emailjs/browser';
 
-const SERVICE_ID = 'service_r125spp';
+const SERVICE_ID  = 'service_r125spp';
 const TEMPLATE_ID = 'template_qpvpw2j';
-const PUBLIC_KEY = 'bnUyzrFs3ckfOL59_';
+const PUBLIC_KEY  = 'bnUyzrFs3ckfOL59_';
 
 emailjs.init(PUBLIC_KEY);
 
-/*
-  الـ template الجديد بيستخدم المتغيرات دي:
-    {{to_email}}   → إيميل المستلم
-    {{to_name}}    → اسم المستلم
-    {{from_name}}  → اسم المرسل
-    {{message}}    → محتوى الرسالة
-    {{title}}      → عنوان المشروع
-    {{reply_link}} → رابط الرد
-    {{time}}       → وقت الإرسال
-*/
 export const sendEmailNotification = async (
-  to_email,        // إيميل المستلم (الـ freelancer)
-  to_name,         // اسم المستلم
-  from_name,       // اسم المرسل (الـ customer)
-  message,         // نص الرسالة
-  title,           // عنوان المشروع
-  reply_link,      // رابط الرد
-  time             // وقت الإرسال (اختياري)
+  to_email,
+  to_name,
+  from_name,
+  message,
+  project_name,
+  reply_link,
+  from_email = ""   // ← إيميل المرسل عشان الـ Reply يكون عليه
 ) => {
   try {
-    // لو الوقت مش موجود، نعمله دلوقتي
-    const currentTime = time || new Date().toLocaleString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
-
     const templateParams = {
-      to_email: to_email,
-      to_name: to_name,
-      from_name: from_name,
-      message: message,
-      title: title,
-      reply_link: reply_link,
-      time: currentTime
+      to_email,
+      to_name,
+      title:        project_name,
+      name:         from_name,
+      message,
+      email:        to_email,
+      from_email,               // ← {{from_email}} في الـ template
+      reply_link,
+      current_date: new Date().toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      }),
     };
 
-    console.log('📧 Sending email with params:', templateParams);
-
     const res = await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
-    console.log('✅ Email sent successfully:', res);
+    console.log('✅ Email sent:', res);
     return true;
   } catch (err) {
-    console.error('❌ Email sending failed:', err.text || err.message || err);
+    console.error('❌ Email error:', err.text || err.message || err);
     return false;
   }
 };

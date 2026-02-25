@@ -3,13 +3,12 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../../supabaseClient";
 import { toast } from "react-toastify";
+import { sendEmailNotification } from "../services/emailService";
 import {
   FaFileInvoice, FaCheckCircle, FaTimesCircle,
   FaClock, FaEye, FaUser, FaEnvelope,
-  FaMoneyBillWave, FaCalendarAlt, FaSearch,
-  FaComments
+  FaMoneyBillWave, FaCalendarAlt, FaSearch
 } from "react-icons/fa";
-import ChatWidget from "../chat/ChatWidget";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const theme = {
@@ -32,12 +31,11 @@ const statusConfig = {
 };
 
 const ClientInvoices = () => {
-  const [invoices, setInvoices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [invoices,     setInvoices]     = useState([]);
+  const [loading,      setLoading]      = useState(true);
+  const [search,       setSearch]       = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [updating, setUpdating] = useState(null);
-  const [activeChatItem, setActiveChatItem] = useState(null);
+  const [updating,     setUpdating]     = useState(null); // invoice_id اللي بيتحدث
 
   /* ── جيب الفواتير بتاعة الـ client ── */
   useEffect(() => {
@@ -98,23 +96,27 @@ const ClientInvoices = () => {
         inv.invoice_id === invoiceId ? { ...inv, status: newStatus } : inv
       ));
 
-      toast.success(
-        <div>
-          ✅ Invoice {newStatus === "approved" ? "Approved" : "Rejected"}!
-          {newStatus === "approved" && (
-            <button 
-              onClick={() => {
-                const approvedInv = invoices.find(i => i.invoice_id === invoiceId);
-                setActiveChatItem(approvedInv);
-              }}
-              style={{ marginLeft: "10px", background: "none", border: "1px solid white", borderRadius: "5px", padding: "2px 8px", color: "white" }}
-            >
-              💬 Chat Now
-            </button>
-          )}
-        </div>,
-        { autoClose: 5000 }
-      );
+      // ── إرسال إيميل للـ Freelancer ──
+      const inv = invoices.find(i => i.invoice_id === invoiceId);
+      if (inv?.freelancer_email) {
+        try {
+          const clientName = localStorage.getItem("client_name") || "Client";
+          await sendEmailNotification(
+            inv.freelancer_email,
+            inv.freelancer_name || "Freelancer",
+            clientName,
+            newStatus === "approved"
+              ? `Great news! "${inv.service_title}" invoice has been approved by ${clientName}. Total: ${Number(inv.total).toLocaleString()} EGP`
+              : `"${inv.service_title}" invoice has been rejected by ${clientName}. Please follow up with the client.`,
+            inv.service_title,
+            `${window.location.origin}/dashboard`,
+            localStorage.getItem("client_email") || ""  // ← from_email عشان الـ Reply يروح للـ client
+          );
+          toast.info(newStatus === "approved" ? "📧 Freelancer notified!" : "📧 Freelancer notified");
+        } catch {}
+      }
+
+      toast.success(newStatus === "approved" ? "✅ Invoice Approved!" : "❌ Invoice Rejected");
     } catch (err) {
       toast.error("Failed to update: " + err.message);
     } finally {
@@ -349,26 +351,6 @@ const ClientInvoices = () => {
                                 </motion.button>
                               </>
                             )}
-
-                            {/* زر الشات للفواتير غير المعلقة */}
-                            {inv.status !== "pending" && (
-                              <motion.button whileHover={{ scale:1.05 }} whileTap={{ scale:0.95 }}
-                                onClick={() => setActiveChatItem(
-                                  activeChatItem?.invoice_id === inv.invoice_id ? null : inv
-                                )}
-                                style={{
-                                  background: activeChatItem?.invoice_id === inv.invoice_id
-                                    ? `linear-gradient(135deg,${theme.primary},${theme.purple})`
-                                    : "rgba(79,70,229,0.08)",
-                                  border: "none",
-                                  color: activeChatItem?.invoice_id === inv.invoice_id ? "#fff" : theme.primary,
-                                  padding: "8px 14px", borderRadius: 10, fontSize: "0.8rem",
-                                  fontWeight: 600, display: "flex", alignItems: "center", gap: 5,
-                                  cursor: "pointer", transition: "all .2s",
-                                }}>
-                                <FaComments /> Chat
-                              </motion.button>
-                            )}
                           </div>
                         </div>
 
@@ -381,20 +363,6 @@ const ClientInvoices = () => {
           </div>
         )}
       </div>
-
-      {/* Chat Widget */}
-      {activeChatItem && (
-        <ChatWidget
-          projectId={activeChatItem.project_id}
-          projectName={activeChatItem.service_title}
-          clientName={activeChatItem.client_name}
-          clientId={activeChatItem.client_id}
-          freelancerId={activeChatItem.freelancer_id}
-          clientEmail={activeChatItem.client_email}
-          clientPhone={activeChatItem.client_phone}
-          position="bottom-right"
-        />
-      )}
     </div>
   );
 };

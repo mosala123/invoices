@@ -342,7 +342,8 @@ const ShapeInvoices = () => {
             freelancer?.name || "Freelancer",
             `You have a new invoice for "${invoice.serviceTitle}" worth ${total.toLocaleString()} EGP. Please review and approve it.`,
             invoice.serviceTitle,
-            `${window.location.origin}/my-invoices`
+            `${window.location.origin}/my-invoices`,
+            freelancer?.email || ""   // ← from_email عشان الـ Reply يروح عليه
           );
           toast.info("📧 Email sent to client!");
         } catch {}
